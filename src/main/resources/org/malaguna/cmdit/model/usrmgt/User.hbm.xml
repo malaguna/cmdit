@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.malaguna.cmdit.model.usrmgt.User" table="usuario">
+		<id name="pid" type="string">
+			<column name="login" />
+			<generator class="assigned" />
+		</id>
+
+		<property name="oid" type="string" length="36">
+			<column name="oid"/>
+		</property>
+
+		<property name="date" type="date">
+			<column name="fecha" length="0"/>
+		</property>
+
+		<property name="name" type="string">
+			<column name="nombre"/>
+		</property>
+
+		<property name="surName" type="string">
+			<column name="apellidos"/>
+		</property>
+
+		<property name="active" type="java.lang.Boolean">
+			<column name="activo"/>
+		</property>
+
+		<!-- Asociaciones -->
+
+		<set name="roles" table="participacion" lazy="false">
+			<key column="login" />
+			<element column="rol" type="string" />
+		</set>
+	</class>
+</hibernate-mapping>

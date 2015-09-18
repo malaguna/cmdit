@@ -1,0 +1,137 @@
+/**
+ * This file is part of CMDit.
+ *
+ * CMDit is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * CMDit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CMDit.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.malaguna.cmdit.service.reflection;
+
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+
+import org.apache.commons.beanutils.PropertyUtils;
+import org.hibernate.Hibernate;
+import org.hibernate.collection.internal.PersistentList;
+import org.hibernate.collection.internal.PersistentSet;
+import org.hibernate.proxy.HibernateProxy;
+import org.malaguna.cmdit.model.AbstractObject;
+
+public class HibernateProxyUtils {
+	
+	public static Object unproxy(Object object) {
+		Object result = object;
+		
+		if (object != null && isProxy(object)) {
+			Hibernate.initialize(object);
+			HibernateProxy proxy = (HibernateProxy) object;
+			result = proxy
+				.getHibernateLazyInitializer()
+				.getImplementation();
+		}
+		
+		return result;
+	}
+	
+	public static boolean isProxy(Object object){
+		return object instanceof HibernateProxy;
+	}
+	
+	private static boolean isDomainObject(Class<?> propertyClass) {
+		return AbstractObject.class.isAssignableFrom(propertyClass);
+	}
+
+	private static boolean isCollection(Class<?> propertyClass) {
+		return Collection.class.isAssignableFrom(propertyClass);
+	}
+	
+	public Object deepLoad(Object object, Object guideObj) {
+		
+		if(object != null){
+			//unproxy if needed
+			object = unproxy(object);
+
+			//specific deep loading 
+			if (isCollection(object.getClass())) {					
+				deepLoadCollection((Collection<?>) object, guideObj);				
+			}else if(isDomainObject(object.getClass())){
+				deepLoadDomainObject((AbstractObject<?>) object, guideObj);
+			}else{
+				throw new RuntimeException("Unsupported object unproxy");
+			}
+		}
+		
+		return object;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private Collection<?> deepLoadCollection(Collection<?> collection, Object guideObj) {
+		Collection<Object> result = null;
+		
+		try {
+			if (collection instanceof PersistentSet) {
+				result = new HashSet<Object>();
+			}else  if (collection instanceof PersistentList){
+				result = new ArrayList<Object>();			
+			} else {
+				result = collection.getClass().newInstance();
+			}
+			
+			//Recuperar primera instancia del guideObj y usarlo como siguiente guideObj
+			Object collGuideObj = null;
+			
+			for (Object aux : collection) {
+				Object loadedObject = deepLoad(aux, collGuideObj);
+				result.add(loadedObject);
+			} 
+			
+		} catch (Throwable e) {
+			e.printStackTrace();
+		} 
+		
+		return result;
+	}
+	
+	private AbstractObject<?> deepLoadDomainObject(AbstractObject<?> object, Object guideObj) {
+		AbstractObject<?> result = null;
+		
+		PropertyDescriptor[] properties = 
+				PropertyUtils.getPropertyDescriptors(unproxy(object));
+
+		for (PropertyDescriptor property : properties) {
+			String pName = property.getName(); 
+			
+			if (PropertyUtils.isWriteable(object, pName) && 
+				PropertyUtils.isReadable(object, pName)) {
+
+				try {
+					Object propGuideObject = property.getReadMethod().invoke(guideObj);
+					
+					if(null != propGuideObject){
+						deepLoad(property.getReadMethod().invoke(object), propGuideObject);
+					}
+				} catch (IllegalAccessException  e) {
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				} 
+			} 
+		} 
+		
+		return result;
+	}	
+}
