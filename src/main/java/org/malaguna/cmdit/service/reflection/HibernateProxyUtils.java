@@ -30,8 +30,21 @@ import org.hibernate.proxy.HibernateProxy;
 import org.malaguna.cmdit.model.AbstractObject;
 
 public class HibernateProxyUtils {
+	private static HibernateProxyUtils instancia = null;
 	
-	public static Object unproxy(Object object) {
+	protected HibernateProxyUtils(){
+		super();
+	}
+
+	public static HibernateProxyUtils getInstance(){
+		if(instancia == null){
+			instancia = new HibernateProxyUtils();
+		}
+		
+		return instancia;
+	}
+	
+	public Object unproxy(Object object) {
 		Object result = object;
 		
 		if (object != null && isProxy(object)) {
@@ -45,15 +58,15 @@ public class HibernateProxyUtils {
 		return result;
 	}
 	
-	public static boolean isProxy(Object object){
+	public boolean isProxy(Object object){
 		return object instanceof HibernateProxy;
 	}
 	
-	private static boolean isDomainObject(Class<?> propertyClass) {
+	private boolean isDomainObject(Class<?> propertyClass) {
 		return AbstractObject.class.isAssignableFrom(propertyClass);
 	}
 
-	private static boolean isCollection(Class<?> propertyClass) {
+	private boolean isCollection(Class<?> propertyClass) {
 		return Collection.class.isAssignableFrom(propertyClass);
 	}
 	
