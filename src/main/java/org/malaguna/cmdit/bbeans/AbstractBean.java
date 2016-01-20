@@ -55,8 +55,6 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  */
 public class AbstractBean extends CommandRunner{
 	private final static String AUTH_USER_KEY = "authuser";
-	@Deprecated
-	protected final static String PDF_CONTENT_TYPE = "application/pdf";
 	private Flash flash = null;
 	
 	/**
