@@ -25,6 +25,7 @@ import java.util.Date;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.proxy.HibernateProxy;
 
 public class ReflectionUtils {
 	private static ReflectionUtils instancia = null;
@@ -113,14 +114,8 @@ public class ReflectionUtils {
 		return result;
 	}
 	
-	/**
-	 * It only returns false if object is not an Hibernate Proxy or if object is null
-	 * 
-	 * @param object Object to check
-	 * @return False if it is not an Hibernate Proxy, RuntimeException other case.
-	 */
 	private boolean isHibernateProxy(Object object){
-		boolean result = (object != null)?HibernateProxyUtils.isProxy(object):false;
+		boolean result = (object != null)?(object instanceof HibernateProxy):false;
 		
 		if(result){
 			String error = "Object [%s] of class type [%s] is an hibernate proxy"
@@ -132,7 +127,7 @@ public class ReflectionUtils {
 		return result;
 	}
 	
-	public boolean compareObjects(PropertyDescriptor desc, Object orig, Object nuevo) {
+	private boolean compareObjects(PropertyDescriptor desc, Object orig, Object nuevo) {
 		boolean result = false;
 		
 		if(Date.class.isAssignableFrom(desc.getPropertyType())){
