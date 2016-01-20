@@ -127,7 +127,7 @@ public class ReflectionUtils {
 		return result;
 	}
 	
-	public boolean compareObjects(PropertyDescriptor desc, Object orig, Object nuevo) {
+	private boolean compareObjects(PropertyDescriptor desc, Object orig, Object nuevo) {
 		boolean result = false;
 		
 		if(Date.class.isAssignableFrom(desc.getPropertyType())){
