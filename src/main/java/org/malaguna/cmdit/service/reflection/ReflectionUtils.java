@@ -25,18 +25,20 @@ import java.util.Date;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.proxy.HibernateProxy;
 
 public class ReflectionUtils {
 	private static ReflectionUtils instancia = null;
+	private static HibernateProxyUtils hpu = null;
 
 	protected ReflectionUtils(){
 		super();
 	}
 	
 	public static ReflectionUtils getInstance(){
-		if(instancia == null)
+		if(instancia == null){
 			instancia = new ReflectionUtils();
+			hpu = HibernateProxyUtils.getInstance();
+		}
 		
 		return instancia;
 	}
@@ -61,7 +63,18 @@ public class ReflectionUtils {
 				PropertyDescriptor desc = null;
 				
 				try {
-					desc = PropertyUtils.getPropertyDescriptor(oldObj, atributo);
+					String fisrtAttribute = null;
+					String restAttribute = null;
+					
+					int pos = atributo.indexOf(".");					
+					if(pos >= 0){
+						fisrtAttribute = atributo.substring(0, pos);
+						restAttribute = atributo.substring(pos + 1);
+					}else{
+						fisrtAttribute = atributo;
+					}
+					
+					desc = PropertyUtils.getPropertyDescriptor(oldObj, fisrtAttribute);
 					
 					if(desc != null){											
 						Object oldValue = desc.getReadMethod().invoke(oldObj);
@@ -73,15 +86,19 @@ public class ReflectionUtils {
 							result = (oldValue != null)?compareObjects(desc, oldValue, newValue):(newValue == null);				
 							if(!result){
 								if(msgBuffer != null){
-									auxChangeMsg = buildChangeMessage(desc, atributo, oldValue, newValue);
+									auxChangeMsg = buildChangeMessage(desc, fisrtAttribute, oldValue, newValue);
 								}
 								if(update){
 									updateOldValue(oldObj, desc, oldValue, newValue);
 								}					
 							}
 							
-							msgBuffer.append(getAppendMsg(auxChangeMsg, msgBuffer));
+							if(msgBuffer != null)
+								msgBuffer.append(getAppendMsg(auxChangeMsg, msgBuffer));
 						}
+
+						if(restAttribute != null)
+							compareAndUpdateAttribute(oldValue, newValue, restAttribute, update, msgBuffer);
 					}					
 				} catch (NoSuchMethodException e) {
 					String error = "Error in compareAndUpdateAttribute, class type [%s] has no property [%s]";
@@ -115,7 +132,7 @@ public class ReflectionUtils {
 	}
 	
 	private boolean isHibernateProxy(Object object){
-		boolean result = (object != null)?(object instanceof HibernateProxy):false;
+		boolean result = (object != null)?hpu.isProxy(object):false;
 		
 		if(result){
 			String error = "Object [%s] of class type [%s] is an hibernate proxy"
