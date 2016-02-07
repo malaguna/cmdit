@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+		http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+    
+	<name>cmdit</name>
+	
+	<application>
+		<!-- Configuración de archivos de recursos -->
+		<resource-bundle>
+			<base-name>org.malaguna.cmdit.Messages</base-name>
+			<var>cmditmsgs</var>
+		</resource-bundle>
+	</application>	
+
+	<converter>
+		<display-name>StringSerial</display-name>
+		<converter-id>StringSerial</converter-id>
+		<converter-class>org.malaguna.cmdit.bbeans.converters.StringSerialConverter</converter-class>
+	</converter>
+
+	<managed-bean>
+		<managed-bean-name>userMgtBean</managed-bean-name>
+		<managed-bean-class>org.malaguna.cmdit.bbeans.usrmgt.UserMgtMBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
+
+	<managed-bean>
+		<managed-bean-name>auditBean</managed-bean-name>
+		<managed-bean-class>org.malaguna.cmdit.bbeans.usrmgt.AuditMBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
+
+</faces-config>

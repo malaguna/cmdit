@@ -1,0 +1,315 @@
+@CHARSET "UTF-8";
+
+.footer {
+	margin-left: auto;
+	margin-right: auto;
+	font-family: monospace;
+	text-align: center;
+	font-size: small;
+	clear: both;	
+}
+
+/****************************/
+/* PrimeFaces customization */
+/****************************/
+
+.ui-widget {
+	font-size: 80%;
+	font-family: Arial;
+}
+
+.ui-widget .ui-widget {
+    font-size: 100%;
+    font-family: Arial;
+ }
+
+.ui-growl {
+	position: absolute;
+	right: 11%;
+	top: 2%;
+	z-index: 999999 !important;
+}
+
+.linkImage {
+	border-style: none !important;
+}
+
+.top-align {
+	vertical-align: top;
+}
+
+.top-right-align {
+	vertical-align: top;
+	text-align: right;
+}
+
+/* Elimina el borde punteado a los links y botones cuando
+ se les da click (Esto pasa sobre todo en IE) */
+a:focus, button:focus {
+	outline: none;
+}
+
+/* Evita que las columnas crezcan horizontalmente y se limita al tamaño */
+.ui-datatable thead th,.ui-datatable tbody td,.ui-datatable tfoot td {
+	white-space: normal !important;
+}
+
+/* Adapta el ancho del input de filtrado en selectonemenu.
+ * Corrige posicion del icono Lupa */
+.ui-selectonemenu-filter-container {
+    width: 100% !important;
+    margin-right: 0;
+}.ui-selectonemenu-panel .ui-selectonemenu-filter-container .ui-icon {
+    top: 10px;
+    right: 35px;
+}
+
+/* Posicion absoluta de dialogos que permite moverlos 
+ * cuando se mueva el scroll de la pagina */
+.ui-dialog {
+	position: absolute;    
+    display: none;
+}
+
+/****************************/
+/* Template styles          */
+/****************************/
+
+html, body {
+	height: 100%;	
+	outline: 0;
+	margin: 0;
+	min-width: 900px;
+	min-height: 500px;
+	font-family: Arial;
+	background-color: #777777;	
+}
+
+div.page {
+	/* Positioning */
+    /* height: auto!important; */
+    min-height:80%!important;
+	/* Colors */
+	background-color: white;
+}
+
+div.header {	
+	height: 60px;
+	position: relative; 
+	z-index: 10;
+	background-color: #AAAAAA;
+}
+
+div.menuPanel {
+	position: relative;
+}
+
+div.mainContent {
+	padding-top: 0;
+	min-height: 300px;	
+}
+
+div.oldMainContent {
+	width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: left;
+	min-height: 500px;
+	
+	/* display: inline-block; */
+	padding-bottom: 15px;
+}
+
+/****************************/
+/* BasicFormTemplate styles */
+/****************************/
+
+div.bfHeader {	
+	height: 24px;
+	width: 100%;	
+	background-color: #000000;    
+    position: relative;
+	margin: 0;
+    border: 0;   
+    text-align: left;   
+    vertical-align: middle;
+    border-top: solid 1px #A8A8A8;
+    padding-top: 3px;    
+}
+
+div.bfHeader {
+	margin-top: 15px;
+	margin-bottom: 15px;
+	text-align: center;
+}
+
+div.bfHeaderText {
+	margin-left: 18px; 	
+	vertical-align: middle;
+	font-size: 10pt; 
+    font-weight: bold;    
+    color: white;
+}
+
+div.bfFrmSearch {
+	width: 30%;
+	float: left;
+}
+
+div.bfFrmSearchForm {
+	width: 95%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+div.bfRightContent {
+	width: 70%;
+	float: right;
+}
+
+div.bfResultRightTable {
+	width: 95%;
+	margin-left: auto;
+	margin-right: auto;
+	font-size: 13px;
+}
+
+.bfResultTable {
+	width: 100% !important;
+	height: 100% !important;
+	margin: 0;
+	overflow: auto;
+	position: relative;
+}
+
+.centered{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* Centra vertical y horizontalmente un panel */ 
+.centered-panel {
+	position: relative;
+	height: 100% !important;
+	margin: 0 auto;
+	padding: 5% 0;
+}
+
+/* Toolbar para las cabeceras de las Datatables */
+.ui-datatable-toolbar{
+	border-radius: 0;
+	background: none !important;
+	border: none !important;
+	margin: 0;
+	padding: 0;
+}
+
+/* Eliminamos los bordes redondeados */
+.ui-corner-top {
+    border-radius: 0;
+}
+.ui-corner-bottom {
+    border-radius: 0;
+}
+
+/* Overlays (Fondos modales y esperas) */
+.ui-widget-overlay {
+    background: #4f4f4f;
+    opacity: .50;
+    filter: Alpha(Opacity=50);
+}
+
+/******************************************/
+/* HEADER: Template styles for components */
+/******************************************/
+
+.ui-header-logo { 
+   	margin-top: 0; 
+   	margin-left: 0;   	
+}
+
+.ui-header-btModulos { 
+   	margin-top: 0; 
+   	margin-left: 4px;
+   	margin-right: 4px;   	
+}
+
+/* Clases con las propiedades de las columnas
+ que conforman la barra del header */
+.ui-header-column-auto{width: auto;height:auto;}
+.ui-header-column-full{width: 100%;height:auto;}
+
+/* Alineacion del texto en la cabeceras de las tablas */
+.ui-datatable thead th, .ui-datatable tfoot td{
+	text-align:left;
+}
+
+/* Clases para eliminar los border de una tabla */
+.noBorders tr, .noBorders td {
+	border: none !important;
+	background: #DB4865 url("/showcase/javax.faces.resource/images/ui-bg_diagonals-small_40_db4865_40x40.png.xhtml?ln=primefaces-hot-sneaks") repeat scroll 50% 50%;
+}
+
+/* Elimina el boton "X" de limpieza de texto 
+	en los inputs añadido automaticamente por
+	el navegador (Internet Explorer) */
+::-ms-clear {
+   display: none;
+}
+
+/* Estilo para inputs con atributo readonly=true **/
+.ui-inputfield[readonly], .ui-inputfield[readonly].ui-state-focus {
+	color: black;
+	background-color: #e3e3e3;
+}
+
+/* Estilo para inputs con atributo autocomplete=true **/
+.ui-inputfield[autocomplete], .ui-inputfield[autocomplete].ui-state-focus {
+	color: black;
+	background-color: #d9ffd0;
+}
+
+/*******************************************************/
+/* ESPECIFIC: Template styles for especific components */
+/*******************************************************/
+
+/* Estilo del picklist */
+.ui-picklist.grupoPF .ui-picklist-list{
+	width: 300px !important;
+	height: 350px !important;
+	background: white;
+}
+
+.ui-picklist.grupoPF .ui-picklist-filter {
+    padding-right: 10px;
+    width: 95%;
+}
+
+.ui-picklist.grupoPF .ui-picklist-buttons {
+    height: 200px;
+    padding: 50px 5px;
+}
+
+/* Estilo para tablas mostradas al expandir una fila 
+   de otra tabla con rowExpansion*/
+.ui-datatable.tableRowExpansion {
+    border: solid 1px #04a6dc;
+	margin-left:25px; 
+	margin-bottom:15px; 
+	margin-right:25px;    
+}
+
+.ui-datatable.tableRowExpansion th {
+    background: #04a6dc;
+}
+
+/** Estilo personalizado para el panel 'lupa' */
+.panelSubmaestro, .panelSubmaestro th, .panelSubmaestro td {
+    padding: 2px !important;
+}
+
+/** Fuerza la alineacion vertical del componente selectonemenu 
+	ya que en determinadas versiones de IE no lo alinea bien*/
+td .ui-selectonemenu {
+    vertical-align: top;
+}

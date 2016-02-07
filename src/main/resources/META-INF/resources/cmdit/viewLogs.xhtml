@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/xhtml/include/template.xhtml">
+	<ui:define name="content">
+	<div class="oldMainContent">
+
+		<h3
+			class="ui-widget ui-widget-header ui-corner-all submenu-title bfHeader">
+			<p:outputLabel value="Auditoría de la Aplicacion" />
+		</h3>
+
+		<div class="bfFrmSearch">
+			<h:form id="bfSearchForm">
+				<div class="bfFrmSearchForm">
+					<p:panelGrid columns="2">
+						<f:facet name="header">
+							<p:outputLabel value="Filtro de Logs" />
+						</f:facet>
+
+						<p:outputLabel id="frmBUSerLbl" for="frmBUser" value="Usuario" />
+						<h:panelGroup>
+							<p:inputText id="frmBUser" value="#{auditBean.usuario}" size="6" />
+							<p:commandButton
+								actionListener="#{auditBean.alCleanChooseUserForm}"
+								icon="ui-icon-search" oncomplete="PF('dlgChoose').show();" 
+								update=":bfSearchUser:frmEPanel frmBUser"/>
+						</h:panelGroup>
+
+						<p:outputLabel id="frmBAccionLbl" for="frmBAccion" value="Accion" />
+						<p:selectOneMenu id="frmBAccion" value="#{auditBean.accion}">
+							<f:selectItem itemValue="#{null}" itemLabel="Ninguna" />
+							<f:selectItems value="#{auditBean.accList}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel id="frmBDesdeLbl" for="frmBDesde" value="Desde" />
+						<p:calendar id="frmBDesde" showOn="button" size="8"
+							value="#{auditBean.fInicial}" />
+
+						<p:outputLabel id="frmBHastaLbl" for="frmBHasta" value="Hasta" />
+						<p:calendar id="frmBHasta" showOn="button" size="8"
+							value="#{auditBean.fFinal}" />
+
+						<f:facet name="footer">
+							<p:commandButton id="find" value="Buscar"
+								actionListener="#{auditBean.alFindLogs}" process="@form"
+								update=":bfResultTableForm:resultTable" />
+						</f:facet>
+					</p:panelGrid>
+				</div>
+			</h:form>
+		</div>
+
+		<div class="bfRightContent">
+			<h:form id="bfResultTableForm">
+				<div class="bfResultRightTable">
+					<p:dataTable id="resultTable" var="row" rows="10"
+						value="#{auditBean.logResult}" paginator="true"
+						paginatorPosition="bottom" widgetVar="resTable" scrollable="true">
+						
+						<f:facet name="header">
+							<p:outputLabel value="Resultados" />
+						</f:facet>
+
+						<p:column width="65">
+							<f:facet name="header">
+								<p:outputLabel value="Usuario" />
+							</f:facet>
+							<p:outputLabel value="#{row.user.pid}" />
+						</p:column>
+
+						<p:column sortBy="action" width="120">
+							<f:facet name="header">
+								<p:outputLabel value="Accion" />
+							</f:facet>
+							<p:outputLabel value="#{row.action}" />
+						</p:column>
+
+						<p:column sortBy="stamp" width="100">
+							<f:facet name="header">
+								<p:outputLabel value="Fecha" />
+							</f:facet>
+							<p:outputLabel value="#{row.stamp}" />
+						</p:column>
+
+						<p:column filterBy="comment" filterMatchMode="contains">
+							<f:facet name="header">
+								<p:outputLabel value="Comentario" />
+							</f:facet>
+							<p:outputLabel value="#{row.comment}" />
+						</p:column>
+
+					</p:dataTable>
+				</div>
+			</h:form>
+		</div>
+
+		<h:form id="bfSearchUser">
+			<p:dialog id="dlgChooseUser" header="Seleccionar Usuario"
+				width="600"	widgetVar="dlgChoose" visible="false" modal="true">
+				
+				<p:panelGrid columns="2" id="frmEPanel">
+					<p:panelGrid columns="2">
+						<p:panelGrid columns="2">
+							<p:outputLabel id="frmECodeLbl" for="frmECode" value="Login" />
+							<p:inputText id="frmECode" value="#{auditBean.usrSearch.pid}" />
+	
+							<p:outputLabel id="frmENameLbl" for="frmEName" value="Nombre" />
+							<p:inputText id="frmEName" value="#{auditBean.usrSearch.name}" />
+	
+							<p:outputLabel id="frmESurNameLbl" for="frmESurName"
+								value="Apellidos" />
+							<p:inputText id="frmESurName"
+								value="#{auditBean.usrSearch.surName}" />
+	
+							<p:outputLabel id="frmEActiveLbl" for="frmEActive" value="Activo" />
+							<p:selectOneMenu id="frmEActive"
+								value="#{auditBean.usrSearch.active}">
+								<f:selectItem itemLabel="..." itemValue="#{null}" />
+								<f:selectItem itemLabel="Si" itemValue="#{true}" />
+								<f:selectItem itemLabel="No" itemValue="#{false}" />
+							</p:selectOneMenu>
+	
+							<f:facet name="footer">
+								<p:commandButton id="btnBuscar" value="Buscar" process="@form"
+									update=":bfSearchUser:frmTableD"
+									actionListener="#{auditBean.alFindUser}" />
+							</f:facet>
+						</p:panelGrid>
+	
+						<p:dataTable id="frmTableD" var="usr"
+							value="#{auditBean.usrResult}">
+	
+							<p:column headerText="Login">
+								<p:outputLabel value="#{usr.pid}" />
+							</p:column>
+	
+							<p:column headerText="Nombre">
+								<p:outputLabel value="#{usr.fullName}" />
+							</p:column>
+	
+							<p:column>
+								<p:commandButton icon="ui-icon-check"
+									actionListener="#{auditBean.selectUserFromDialog(usr)}"
+									oncomplete="PF('dlgChoose').hide();"
+									update=":bfSearchForm:frmBUser" />
+							</p:column>
+						</p:dataTable>
+					</p:panelGrid>
+				</p:panelGrid>
+			</p:dialog>
+		</h:form>
+
+	</div>
+	</ui:define>
+</ui:composition>
+</html>

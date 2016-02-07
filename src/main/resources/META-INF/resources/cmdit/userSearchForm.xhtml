@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:cc="http://java.sun.com/jsf/composite">
+
+<cc:interface>
+
+	<!-- Ajax Updates -->
+	<cc:attribute required="true"  name="updateAfterSearch"/>
+
+	<!-- FormID and Styles -->
+	<cc:attribute required="true"  name="searchFormId"/>
+	<cc:attribute required="false" name="headerCssStyle"/>
+	
+	<!-- Internationalization -->
+	<cc:attribute required="false" name="headerTitle" default="#{cmditmsgs['userMgt.searchFrm.title']}"/>
+	<cc:attribute required="false" name="loginText"   default="#{cmditmsgs['userMgt.searchFrm.login']}"/>
+	<cc:attribute required="false" name="nameText"    default="#{cmditmsgs['userMgt.searchFrm.name']}"/>
+	<cc:attribute required="false" name="surNameText" default="#{cmditmsgs['userMgt.searchFrm.surName']}"/>
+	<cc:attribute required="false" name="activeText"  default="#{cmditmsgs['userMgt.searchFrm.active']}"/>
+	<cc:attribute required="false" name="yesText"     default="#{cmditmsgs['userMgt.searchFrm.active.yes']}"/>
+	<cc:attribute required="false" name="noText"      default="#{cmditmsgs['userMgt.searchFrm.active.no']}"/>
+	<cc:attribute required="false" name="findText"    default="#{cmditmsgs['userMgt.searchFrm.find']}"/>
+	
+	<!-- BackBean -->
+	<cc:attribute required="false" name="mgtBean" default="#{userMgtBean}"/>
+
+	<!-- Action and Listeners -->
+	<cc:attribute required="false" 
+		name="searchActionListener" default="#{userMgtBean.alFindObject}" 
+		method-signature="void actionListener(javax.faces.event.ActionEvent)"/>	
+	
+</cc:interface>
+
+<cc:implementation>
+	<h:form id="#{cc.attrs.searchFormId}">
+		<div class="bfFrmSearchForm">
+			<p:panelGrid columns="2">
+				<f:facet name="header">
+					<h3 class="#{cc.attrs.headerCssStyle}">#{cc.attrs.headerTitle}</h3>
+				</f:facet>
+
+				<p:outputLabel id="frmBCodeLbl" for="frmBCode" value="#{cc.attrs.loginText}" />
+				<p:inputText id="frmBCode" value="#{cc.attrs.mgtBean.fSearch.pid}"
+					size="6" />
+
+				<p:outputLabel id="frmBNameLbl" for="frmBName" value="#{cc.attrs.nameText}" />
+				<p:inputText id="frmBName" value="#{cc.attrs.mgtBean.fSearch.name}" />
+
+				<p:outputLabel id="frmBSurNameLbl" for="frmBSurName" value="#{cc.attrs.surNameText}" />
+				<p:inputText id="frmBSurName" value="#{cc.attrs.mgtBean.fSearch.surName}" />
+
+				<p:outputLabel id="frmBActiveLbl" for="frmBActive" value="#{cc.attrs.activeText}" />
+				<p:selectOneMenu id="frmBActive" value="#{cc.attrs.mgtBean.fSearch.active}">
+					<f:selectItem itemLabel="..." itemValue="#{null}" />
+					<f:selectItem itemLabel="#{cc.attrs.yesText}" itemValue="#{true}" />
+					<f:selectItem itemLabel="#{cc.attrs.noText}" itemValue="#{false}" />
+				</p:selectOneMenu>
+
+				<f:facet name="footer">
+					<p:commandButton id="find" value="#{cc.attrs.findText}"
+						actionListener="#{cc.attrs.searchActionListener}" 
+						update="#{cc.attrs.updateAfterSearch}" process="@form" />
+				</f:facet>
+			</p:panelGrid>
+		</div>
+	</h:form>
+</cc:implementation>
+
+</html>

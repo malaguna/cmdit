@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:cc="http://java.sun.com/jsf/composite">
+
+<cc:interface>
+	<!-- FormID and Styles -->
+	<cc:attribute required="true"  name="resultTableFormId"/>
+	<cc:attribute required="true"  name="resultTableId"/>
+
+	<!-- Internationalization -->
+	<cc:attribute required="false" name="loginText"   default="#{cmditmsgs['userMgt.searchFrm.login']}"/>
+	<cc:attribute required="false" name="passwdText"  default="#{cmditmsgs['userMgt.searchFrm.passwd']}"/>
+	<cc:attribute required="false" name="nameText"    default="#{cmditmsgs['userMgt.searchFrm.name']}"/>
+	<cc:attribute required="false" name="surNameText" default="#{cmditmsgs['userMgt.searchFrm.surName']}"/>
+	<cc:attribute required="false" name="activeText"  default="#{cmditmsgs['userMgt.searchFrm.active']}"/>
+	<cc:attribute required="false" name="yesText"     default="#{cmditmsgs['userMgt.searchFrm.active.yes']}"/>
+	<cc:attribute required="false" name="noText"      default="#{cmditmsgs['userMgt.searchFrm.active.no']}"/>
+
+	<!-- BackBean -->
+	<cc:attribute required="false" name="mgtBean" default="#{userMgtBean}"/>
+
+	<!-- Action and Listeners -->
+	<cc:attribute required="false" 
+		name="prepareAdditionListener" default="#{userMgtBean.alPrepareAddition}" 
+		method-signature="void actionListener(javax.faces.event.ActionEvent)"/>	
+	<cc:attribute required="false" 
+		name="prepareEditionListener" default="#{userMgtBean.alPrepareEdition}" 
+		method-signature="void actionListener(javax.faces.event.ActionEvent)"/>	
+	<cc:attribute required="false" 
+		name="prepareRolEditionListener" default="#{userMgtBean.alPrepareRolEdition}" 
+		method-signature="void actionListener(javax.faces.event.ActionEvent)"/>	
+	<cc:attribute required="false" 
+		name="saveObjectListener" default="#{userMgtBean.alSaveObject}" 
+		method-signature="void actionListener(javax.faces.event.ActionEvent)"/>	
+	<cc:attribute required="false" 
+		name="saveDigestListener" default="#{userMgtBean.alSaveDigest}" 
+		method-signature="void actionListener(javax.faces.event.ActionEvent)"/>	
+	<cc:attribute required="false" 
+		name="saveRolesListener" default="#{userMgtBean.alSaveRoles}" 
+		method-signature="void actionListener(javax.faces.event.ActionEvent)"/>	
+	<cc:attribute required="false" 
+		name="activeUserListener" default="#{userMgtBean.alActiveUser}" 
+		method-signature="void actionListener(javax.faces.event.ActionEvent)"/>	
+
+</cc:interface>
+
+<cc:implementation>
+	<h:form id="#{cc.attrs.resultTableFormId}">
+	
+		<p:dataTable id="#{cc.attrs.resultTableId}" var="row" rows="10"
+			value="#{cc.attrs.mgtBean.objList}" paginator="true"
+			paginatorPosition="bottom" scrollable="true">
+
+			<f:facet name="header">
+				<h3 class="CardBigTopic">#{msg['userMgt.resultTable']}</h3>
+			</f:facet>
+
+			<f:facet name="header">
+				<p:toolbar styleClass="ui-datatable-toolbar">
+					<f:facet name="right">
+						<p:commandLink
+							actionListener="#{cc.attrs.prepareAdditionListener}"
+							update="#{cc.clientId}:bfEditionForm:frmEPanel"
+							oncomplete="PF('dlg').show()">
+							<p:graphicImage value="/icons/database_add.png"
+								title="Crear" alt="Crear" />
+						</p:commandLink>
+					</f:facet>
+				</p:toolbar>
+			</f:facet>
+
+			<p:column headerText="Login" width="70">
+				<p:outputLabel value="#{row.pid}" />
+			</p:column>
+
+			<p:column headerText="Nombre">
+				<p:outputLabel value="#{row.fullName}" />
+			</p:column>
+
+			<p:column headerText="Fecha" width="100">
+				<p:outputLabel value="#{row.date}" />
+			</p:column>
+
+			<p:column headerText="Acciones">
+
+				<p:commandLink actionListener="#{cc.attrs.prepareEditionListener}"
+					process="@this" update=":#{cc.clientId}:bfEditionForm:frmEPanel"
+					oncomplete="PF('dlg').show()" rendered="#{row.active}">
+					<p:graphicImage value="/icons/user.png" title="Editar"
+						alt="Editar" />
+				</p:commandLink>
+
+				<p:commandLink
+					actionListener="#{cc.attrs.prepareRolEditionListener}"
+					process="@this" update="#{cc.clientId}:bfRoleListForm:pickList"
+					oncomplete="PF('dlgRoles').show()" rendered="#{row.active}">
+					<p:graphicImage value="/icons/group.png" title="Asociar roles"
+						alt="Asociar Roles" />
+				</p:commandLink>
+
+				<p:commandLink
+					actionListener="#{cc.attrs.activeUserListener}"
+					process="@this" rendered="#{not row.active}"
+					update="#{cc.attrs.resultTableId}">
+					<p:graphicImage value="/icons/lock_delete.png" title="Activar usuario"
+						alt="Activar usuario" />
+				</p:commandLink>
+			</p:column>
+
+		</p:dataTable>
+	</h:form>
+
+	<h:form id="bfEditionForm">
+		<p:dialog id="dlgEdicion" header="Editar/Crear Usuarios"
+			widgetVar="dlg" visible="false" modal="true">
+	
+			<p:panelGrid columns="2" id="frmEPanel">
+				<p:outputLabel id="frmECodeLbl" for="frmECode" value="#{cc.attrs.loginText}" />
+				<p:inputText id="frmECode" required="true"
+					value="#{cc.attrs.mgtBean.fEdition.pid}" size="6" />
+	
+				<p:outputLabel id="frmENameLbl" for="frmEName" value="#{cc.attrs.nameText}" />
+				<p:inputText id="frmEName" required="true"
+					value="#{cc.attrs.mgtBean.fEdition.name}" />
+	
+				<p:outputLabel id="frmESurNameLbl" for="frmESurName" value="#{cc.attrs.surNameText}" />
+				<p:inputText id="frmESurName" required="true"
+					value="#{cc.attrs.mgtBean.fEdition.surName}" />
+	
+				<p:outputLabel id="frmEActiveLbl" for="frmEActive" value="#{cc.attrs.activeText}" />
+				<p:selectOneMenu id="frmEActive"
+					value="#{cc.attrs.mgtBean.fEdition.active}">
+					<f:selectItem itemLabel="#{cc.attrs.yesText}" itemValue="#{true}" />
+					<f:selectItem itemLabel="#{cc.attrs.noText}" itemValue="#{false}" />
+				</p:selectOneMenu>
+	
+				<f:facet name="footer">
+					<p:commandButton id="dlgSave" value="Guardar" process="@form"
+						update="#{cc.clientId}:#{cc.attrs.resultTableFormId}:#{cc.attrs.resultTableId}"
+						oncomplete="handleLoginRequest(xhr, status, args)"
+						actionListener="#{cc.attrs.saveObjectListener}" />
+				</f:facet>
+			</p:panelGrid>
+		</p:dialog>
+	
+		<script type="text/javascript">
+			function handleLoginRequest(xhr, status, args) {
+				if (!args.validationFailed) {
+					PF('dlg').hide();
+				}
+			}
+		</script>
+	</h:form>
+	
+	<h:form id="bfDigestForm">
+		<p:dialog id="dlgDigest" header="Cambio de Password"
+			widgetVar="dlgDigest" visible="false" modal="true">
+	
+			<p:focus for="frmDCode" />
+			<p:panelGrid columns="2" id="frmEDigest">
+				<p:outputLabel id="frmDCodeLbl" for="frmDCode" value="#{cc.attrs.loginText}" />
+				<p:inputText id="frmDCode" value="#{cc.attrs.mgtBean.fEdition.pid}"
+					readonly="true" />
+	
+				<p:outputLabel id="frmDDigestLbl1" for="frmDDigest1" value="#{cc.attrs.passwdText}" />
+				<p:password id="frmDDigest1" required="true" feedback="true"
+					match="frmDDigest2" value="#{cc.attrs.mgtBean.password}" />
+	
+				<p:outputLabel id="frmDDigestLbl2" for="frmDDigest2" value="#{cc.attrs.passwdText}" />
+				<p:password id="frmDDigest2" required="true" 
+					value="#{cc.attrs.mgtBean.password}" />
+	
+				<f:facet name="footer">
+					<p:commandButton id="dlgSaveDigest" value="Guardar"
+						process="@form" oncomplete="PF('dlgDigest').hide();"
+						actionListener="#{cc.attrs.saveDigestListener}" />
+				</f:facet>
+			</p:panelGrid>
+	
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="bfRoleListForm">
+		<p:dialog id="dlgRoles" header="Edición de Roles"
+			widgetVar="dlgRoles" visible="false" modal="true">
+	
+			<p:pickList id="pickList" value="#{cc.attrs.mgtBean.roleList}" var="role"
+				itemLabel="#{role}" itemValue="#{role}">
+				<f:facet name="sourceCaption">Disponibles</f:facet>
+				<f:facet name="targetCaption">Asignados</f:facet>
+			</p:pickList>
+	
+			<f:facet name="footer">
+				<p:commandButton id="dlgSaveRoles" value="Guardar" process="@form"
+					oncomplete="PF('dlgRoles').hide();"
+					actionListener="#{cc.attrs.saveRolesListener}" />
+			</f:facet>
+		</p:dialog>
+	</h:form>
+
+</cc:implementation>
+
+</html>

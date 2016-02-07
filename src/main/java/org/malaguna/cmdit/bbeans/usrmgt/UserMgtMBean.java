@@ -25,6 +25,7 @@ import javax.faces.event.ActionEvent;
 import org.malaguna.cmdit.bbeans.RequestAbstractBean;
 import org.malaguna.cmdit.model.usrmgt.ActionHelper;
 import org.malaguna.cmdit.model.usrmgt.User;
+import org.malaguna.cmdit.service.commands.usrmgt.ActiveUser;
 import org.malaguna.cmdit.service.commands.usrmgt.FindUser;
 import org.malaguna.cmdit.service.commands.usrmgt.LoadUser;
 import org.malaguna.cmdit.service.commands.usrmgt.RoleEdition;
@@ -40,7 +41,6 @@ public class UserMgtMBean extends RequestAbstractBean implements Serializable{
 	private User fSearch = new User();
 	private User fEdition = new User();
 	private List<User> objList = null;
-	private Boolean creating = Boolean.FALSE;
 	private String password = null;
 	private DualListModel<String> roleList = new DualListModel<String>();
 	
@@ -80,14 +80,6 @@ public class UserMgtMBean extends RequestAbstractBean implements Serializable{
 		this.objList = objList;
 	}
 	
-	public Boolean getCreating() {
-		return creating;
-	}
-
-	public void setCreating(Boolean creating) {
-		this.creating = creating;
-	}
-
 	public String getPassword() {
 		return password;
 	}
@@ -104,22 +96,40 @@ public class UserMgtMBean extends RequestAbstractBean implements Serializable{
 		this.roleList = roleList;
 	}
 
+	public void alPrepareAddition(ActionEvent event){
+		fEdition = new User();
+	}
+		
 	public void alPrepareEdition(ActionEvent event){
 		User aux = (User) selectRowFromEvent(event.getComponent(), User.class);
-		creating = (aux == null);
 		fEdition = (aux != null)?loadObject(aux, ActionHelper.MANAGE_USERS):new User();
 	}
 		
 	public void alPrepareRolEdition(ActionEvent event){
 		User aux = (User) selectRowFromEvent(event.getComponent(), User.class);
-		fEdition = (aux != null)?loadObject(aux, ActionHelper.MANAGE_USERS):new User();
+		fEdition = (aux != null)?loadObject(aux, ActionHelper.MANAGE_USERS):null;
 		
-		RoleEdition cmd = (RoleEdition) createCommand(RoleEdition.class);
-		cmd.setUsuario(fEdition);
-		cmd = (RoleEdition) runCommand(cmd);
+		if(fEdition != null){
+			RoleEdition cmd = (RoleEdition) createCommand(RoleEdition.class);
+			cmd.setUsuario(fEdition);
+			cmd = (RoleEdition) runCommand(cmd);
+			
+			if(cmd != null)
+				setRoleList(cmd.getResult());
+		}
+	}
+	
+	public void alActiveUser(ActionEvent event){
+		User aux = (User) selectRowFromEvent(event.getComponent(), User.class);
 		
-		if(cmd != null)
-			setRoleList(cmd.getResult());
+		ActiveUser cmd = (ActiveUser) createCommand(ActiveUser.class);
+		cmd.setObject(aux);
+		cmd = (ActiveUser) runCommand(cmd);
+		
+		if(cmd != null){
+			setInfoMessage("Usuario activado", "Se ha reactivado al usuario");
+			alFindObject(null);
+		}
 	}
 		
 	public void alSaveObject(ActionEvent event){
