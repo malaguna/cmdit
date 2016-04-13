@@ -234,10 +234,16 @@ public class ReflectionUtils {
 			if(oldSetAux == null){
 				setNewValue(oldObj, desc.getWriteMethod(), newSetAux);
 			}else{
-				oldSetAux.clear();
+				//oldSetAux.clear();
 				
 				if(newSetAux != null && !newSetAux.isEmpty()){
-					oldSetAux.addAll(newSetAux);
+					Collection<?> intersection = CollectionUtils.intersection(oldSetAux, newSetAux);
+					Collection<?> nuevos = CollectionUtils.removeAll(newSetAux, intersection);
+					Collection<?> borrados = CollectionUtils.removeAll(oldSetAux, intersection);
+										
+					oldSetAux.removeAll(borrados);
+					oldSetAux.addAll(nuevos);
+					//oldSetAux.addAll(newSetAux);
 				}
 			}
 		}else{
