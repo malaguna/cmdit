@@ -236,14 +236,13 @@ public class ReflectionUtils {
 			}else{
 				//oldSetAux.clear();
 				
-				if(newSetAux != null && !newSetAux.isEmpty()){
+				if(newSetAux != null){
 					Collection<?> intersection = CollectionUtils.intersection(oldSetAux, newSetAux);
 					Collection<?> nuevos = CollectionUtils.removeAll(newSetAux, intersection);
 					Collection<?> borrados = CollectionUtils.removeAll(oldSetAux, intersection);
 										
 					oldSetAux.removeAll(borrados);
 					oldSetAux.addAll(nuevos);
-					//oldSetAux.addAll(newSetAux);
 				}
 			}
 		}else{
