@@ -24,6 +24,7 @@ import java.util.Date;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.Predicate;
 import org.apache.commons.lang3.StringUtils;
 
 public class ReflectionUtils {
@@ -54,8 +55,12 @@ public class ReflectionUtils {
 		
 		return result;
 	}
-	
+
 	public boolean compareAndUpdateAttribute(Object oldObj, Object newObj, String atributo, boolean update, StringBuffer msgBuffer){
+		return compareAndUpdateAttribute(oldObj, newObj, atributo, update, msgBuffer, null);
+	}
+	
+	public boolean compareAndUpdateAttribute(Object oldObj, Object newObj, String atributo, boolean update, StringBuffer msgBuffer, String msgContext){
 		boolean result = false;
 		
 		if(oldObj != null && newObj != null){
@@ -63,30 +68,30 @@ public class ReflectionUtils {
 				PropertyDescriptor desc = null;
 				
 				try {
-					String fisrtAttribute = null;
+					String firstAttribute = null;
 					String restAttribute = null;
 					
 					int pos = atributo.indexOf(".");					
 					if(pos >= 0){
-						fisrtAttribute = atributo.substring(0, pos);
+						firstAttribute = atributo.substring(0, pos);
 						restAttribute = atributo.substring(pos + 1);
 					}else{
-						fisrtAttribute = atributo;
+						firstAttribute = atributo;
 					}
 					
-					desc = PropertyUtils.getPropertyDescriptor(oldObj, fisrtAttribute);
+					desc = PropertyUtils.getPropertyDescriptor(oldObj, firstAttribute);
 					
 					if(desc != null){											
 						Object oldValue = desc.getReadMethod().invoke(oldObj);
 						Object newValue = desc.getReadMethod().invoke(newObj);
 						
-						if(!isHibernateProxy(oldValue) && !isHibernateProxy(newValue)){
+						if(restAttribute == null && !isHibernateProxy(oldValue) && !isHibernateProxy(newValue)){
 							String auxChangeMsg = null;
 							
 							result = (oldValue != null)?compareObjects(desc, oldValue, newValue):(newValue == null);				
 							if(!result){
 								if(msgBuffer != null){
-									auxChangeMsg = buildChangeMessage(desc, fisrtAttribute, oldValue, newValue);
+									auxChangeMsg = buildChangeMessage(desc, firstAttribute, oldValue, newValue, msgContext);
 								}
 								if(update){
 									updateOldValue(oldObj, desc, oldValue, newValue);
@@ -97,8 +102,28 @@ public class ReflectionUtils {
 								msgBuffer.append(getAppendMsg(auxChangeMsg, msgBuffer));
 						}
 
-						if(restAttribute != null)
-							compareAndUpdateAttribute(oldValue, newValue, restAttribute, update, msgBuffer);
+						if(restAttribute != null){
+							if(Collection.class.isAssignableFrom(desc.getPropertyType())){
+								Collection<?> oldSetAux = (Collection<?>)oldValue;
+								Collection<?> newSetAux = (Collection<?>)newValue;
+								
+								if(oldValue != null && newValue != null){
+									Collection<?> intersection = CollectionUtils.intersection(oldSetAux, newSetAux);
+									
+									for(Object obj : intersection){
+										RUPredicate rup = new RUPredicate(obj.hashCode());
+										Object oldElement  = CollectionUtils.find(oldSetAux, rup);
+										Object newElement  = CollectionUtils.find(newSetAux, rup);
+										
+										String context = (msgContext != null)? msgContext + firstAttribute: firstAttribute;
+										context += "([" + oldElement.toString() + "]).";
+										compareAndUpdateAttribute(oldElement, newElement, restAttribute, update, msgBuffer, context);
+									}
+								}
+							}else{
+								compareAndUpdateAttribute(oldValue, newValue, restAttribute, update, msgBuffer);
+							}
+						}
 					}					
 				} catch (NoSuchMethodException e) {
 					String error = "Error in compareAndUpdateAttribute, class type [%s] has no property [%s]";
@@ -166,8 +191,11 @@ public class ReflectionUtils {
 		return result;
 	}
 	
-	private String buildChangeMessage(PropertyDescriptor desc, String atributo, Object oldValue, Object newValue){
+	private String buildChangeMessage(PropertyDescriptor desc, String atributo, Object oldValue, Object newValue, String msgContext){
 		String result = null;
+		
+		if(msgContext != null)
+			atributo = msgContext + atributo;
 		
 		if(Collection.class.isAssignableFrom(desc.getPropertyType())){
 			StringBuffer msgBuff = null;
@@ -176,7 +204,7 @@ public class ReflectionUtils {
 			
 			if((oldSetAux != null && !oldSetAux.isEmpty()) ||
 				(newSetAux != null && !newSetAux.isEmpty())){
-				msgBuff = new StringBuffer("A la colección [" + atributo + "]");
+				msgBuff = new StringBuffer("{" + atributo + "}");
 			}
 			
 			if(oldSetAux != null && newSetAux != null){
@@ -185,28 +213,28 @@ public class ReflectionUtils {
 				Collection<?> borrados = CollectionUtils.removeAll(oldSetAux, intersection);
 				
 				if(nuevos != null && !nuevos.isEmpty()){
-					msgBuff.append("Se añaden los siguientes elementos: ");
+					msgBuff.append("+++: ");
 					for(Object element : nuevos)
 						msgBuff.append(String.format("[%s], ", element.toString()));
 					msgBuff.delete(msgBuff.length()-2, msgBuff.length());
 				}
 					
 				if(borrados != null && !borrados.isEmpty()){
-					msgBuff.append("Se eliminan los siguientes elementos: ");
+					msgBuff.append("---: ");
 					for(Object element : borrados)
 						msgBuff.append(String.format("[%s], ", element.toString()));
 					msgBuff.delete(msgBuff.length()-2, msgBuff.length());
 				}
 			}else if(oldSetAux != null && newSetAux == null){
 				if(!oldSetAux.isEmpty()){
-					msgBuff.append("Se eliminan los siguientes elementos: ");
+					msgBuff.append("+++: ");
 					for(Object element : oldSetAux)
 						msgBuff.append(String.format("[%s], ", element.toString()));
 					msgBuff.delete(msgBuff.length()-2, msgBuff.length());
 				}
 			}else if(oldSetAux == null && newSetAux != null){
 				if(!newSetAux.isEmpty()){
-					msgBuff.append("Se añaden los siguientes elementos: ");
+					msgBuff.append("---: ");
 					for(Object element : newSetAux)
 						msgBuff.append(String.format("[%s], ", element.toString()));
 					msgBuff.delete(msgBuff.length()-2, msgBuff.length());
@@ -261,4 +289,18 @@ public class ReflectionUtils {
 			e.printStackTrace();
 		}
 	}
+}
+
+class RUPredicate implements Predicate<Object>{
+	int hash = -1;
+	
+	public RUPredicate(int hashCode) {
+		hash = hashCode;
+	}
+	
+	@Override
+	public boolean evaluate(Object obj) {
+		return obj.hashCode() == hash;
+	}
+	
 }
