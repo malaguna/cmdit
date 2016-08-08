@@ -64,6 +64,9 @@ public class ReflectionUtils {
 		boolean result = false;
 		
 		if(oldObj != null && newObj != null){
+			oldObj = hpu.unproxy(oldObj);
+			newObj = hpu.unproxy(newObj);
+			
 			if(!isHibernateProxy(oldObj) && !isHibernateProxy(newObj)){
 				PropertyDescriptor desc = null;
 				
@@ -82,8 +85,8 @@ public class ReflectionUtils {
 					desc = PropertyUtils.getPropertyDescriptor(oldObj, firstAttribute);
 					
 					if(desc != null){											
-						Object oldValue = desc.getReadMethod().invoke(oldObj);
-						Object newValue = desc.getReadMethod().invoke(newObj);
+						Object oldValue = hpu.unproxy(desc.getReadMethod().invoke(oldObj));
+						Object newValue = hpu.unproxy(desc.getReadMethod().invoke(newObj));
 						
 						if(restAttribute == null && !isHibernateProxy(oldValue) && !isHibernateProxy(newValue)){
 							String auxChangeMsg = null;

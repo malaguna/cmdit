@@ -82,7 +82,7 @@ public class HibernateProxyUtils {
 			}else if(isDomainObject(object.getClass())){
 				deepLoadDomainObject((AbstractObject<?>) object, guideObj);
 			}else{
-				throw new RuntimeException("Unsupported object unproxy");
+				//throw new RuntimeException("Unsupported object unproxy");
 			}
 		}
 		
