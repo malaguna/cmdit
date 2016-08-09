@@ -141,7 +141,9 @@ public class HibernateProxyUtils {
 					e.printStackTrace();
 				} catch (InvocationTargetException e) {
 					e.printStackTrace();
-				} 
+				} catch (Exception e){
+					e.printStackTrace();
+				}
 			} 
 		} 
 		
