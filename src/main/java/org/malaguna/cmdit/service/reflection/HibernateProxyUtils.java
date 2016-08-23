@@ -48,11 +48,15 @@ public class HibernateProxyUtils {
 		Object result = object;
 		
 		if (object != null && isProxy(object)) {
+			try{
 			Hibernate.initialize(object);
 			HibernateProxy proxy = (HibernateProxy) object;
 			result = proxy
 				.getHibernateLazyInitializer()
 				.getImplementation();
+			}catch (Exception e){
+				e.printStackTrace();
+			}
 		}
 		
 		return result;
@@ -78,7 +82,7 @@ public class HibernateProxyUtils {
 
 			//specific deep loading 
 			if (isCollection(object.getClass())) {					
-				deepLoadCollection((Collection<?>) object, guideObj);				
+				deepLoadCollection((Collection<?>) object, (Collection<?>) guideObj);				
 			}else if(isDomainObject(object.getClass())){
 				deepLoadDomainObject((AbstractObject<?>) object, guideObj);
 			}else{
@@ -90,29 +94,31 @@ public class HibernateProxyUtils {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private Collection<?> deepLoadCollection(Collection<?> collection, Object guideObj) {
+	private Collection<?> deepLoadCollection(Collection<?> collection, Collection<?> guideObj) {
 		Collection<Object> result = null;
 		
-		try {
-			if (collection instanceof PersistentSet) {
-				result = new HashSet<Object>();
-			}else  if (collection instanceof PersistentList){
-				result = new ArrayList<Object>();			
-			} else {
-				result = collection.getClass().newInstance();
-			}
-			
-			//Recuperar primera instancia del guideObj y usarlo como siguiente guideObj
-			Object collGuideObj = null;
-			
-			for (Object aux : collection) {
-				Object loadedObject = deepLoad(aux, collGuideObj);
-				result.add(loadedObject);
+		if(guideObj != null && !guideObj.isEmpty()){
+			try {
+				if (collection instanceof PersistentSet) {
+					result = new HashSet<Object>();
+				}else  if (collection instanceof PersistentList){
+					result = new ArrayList<Object>();			
+				} else {
+					result = collection.getClass().newInstance();
+				}
+				
+				//Recuperar primera instancia del guideObj y usarlo como siguiente guideObj
+				Object collGuideObj = guideObj.iterator().next();
+				
+				for (Object aux : collection) {
+					Object loadedObject = deepLoad(aux, collGuideObj);
+					result.add(loadedObject);
+				} 
+				
+			} catch (Throwable e) {
+				e.printStackTrace();
 			} 
-			
-		} catch (Throwable e) {
-			e.printStackTrace();
-		} 
+		}
 		
 		return result;
 	}
