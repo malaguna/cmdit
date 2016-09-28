@@ -95,7 +95,7 @@ public class HibernateProxyUtils {
 	
 	@SuppressWarnings("unchecked")
 	private Collection<?> deepLoadCollection(Collection<?> collection, Collection<?> guideObj) {
-		Collection<Object> result = null;
+		Collection<Object> result = collection;
 		
 		if(guideObj != null && !guideObj.isEmpty()){
 			try {
