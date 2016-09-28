@@ -74,7 +74,7 @@ public class ReflectionUtils {
 					String firstAttribute = null;
 					String restAttribute = null;
 					
-					int pos = atributo.indexOf(".");					
+					int pos = atributo.indexOf(".");
 					if(pos >= 0){
 						firstAttribute = atributo.substring(0, pos);
 						restAttribute = atributo.substring(pos + 1);

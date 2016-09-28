@@ -82,7 +82,7 @@ public class HibernateProxyUtils {
 
 			//specific deep loading 
 			if (isCollection(object.getClass())) {					
-				deepLoadCollection((Collection<?>) object, (Collection<?>) guideObj);				
+				object = deepLoadCollection((Collection<?>) object, (Collection<?>) guideObj);				
 			}else if(isDomainObject(object.getClass())){
 				deepLoadDomainObject((AbstractObject<?>) object, guideObj);
 			}else{
@@ -108,11 +108,9 @@ public class HibernateProxyUtils {
 				}
 				
 				//Recuperar primera instancia del guideObj y usarlo como siguiente guideObj
-				Object collGuideObj = guideObj.iterator().next();
-				
+				Object collGuideObj = guideObj.iterator().next();				
 				for (Object aux : collection) {
-					Object loadedObject = deepLoad(aux, collGuideObj);
-					result.add(loadedObject);
+					result.add(deepLoad(aux, collGuideObj));
 				} 
 				
 			} catch (Throwable e) {
@@ -123,9 +121,7 @@ public class HibernateProxyUtils {
 		return result;
 	}
 	
-	private AbstractObject<?> deepLoadDomainObject(AbstractObject<?> object, Object guideObj) {
-		AbstractObject<?> result = null;
-		
+	private void deepLoadDomainObject(AbstractObject<?> object, Object guideObj) {
 		PropertyDescriptor[] properties = 
 				PropertyUtils.getPropertyDescriptors(unproxy(object));
 
@@ -139,7 +135,8 @@ public class HibernateProxyUtils {
 					Object propGuideObject = property.getReadMethod().invoke(guideObj);
 					
 					if(null != propGuideObject){
-						deepLoad(property.getReadMethod().invoke(object), propGuideObject);
+						Object unproxied = deepLoad(property.getReadMethod().invoke(object), propGuideObject);
+						property.getWriteMethod().invoke(object, unproxied);
 					}
 				} catch (IllegalAccessException  e) {
 					e.printStackTrace();
@@ -152,7 +149,5 @@ public class HibernateProxyUtils {
 				}
 			} 
 		} 
-		
-		return result;
 	}	
 }
