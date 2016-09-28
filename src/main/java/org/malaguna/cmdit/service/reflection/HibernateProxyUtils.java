@@ -95,7 +95,7 @@ public class HibernateProxyUtils {
 	
 	@SuppressWarnings("unchecked")
 	private Collection<?> deepLoadCollection(Collection<?> collection, Collection<?> guideObj) {
-		Collection<Object> result = collection;
+		Collection<Object> result = null;
 		
 		if(guideObj != null && !guideObj.isEmpty()){
 			try {
@@ -118,7 +118,7 @@ public class HibernateProxyUtils {
 			} 
 		}
 		
-		return result;
+		return (result == null)?collection:result;
 	}
 	
 	private void deepLoadDomainObject(AbstractObject<?> object, Object guideObj) {
