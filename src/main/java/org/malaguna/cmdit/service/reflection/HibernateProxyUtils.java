@@ -116,7 +116,7 @@ public class HibernateProxyUtils {
 				}
 				
 				collection.clear();
-				collection.add(result);
+				collection.addAll(result);
 				
 			} catch (Throwable e) {
 				e.printStackTrace();
