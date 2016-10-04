@@ -94,15 +94,17 @@ public class HibernateProxyUtils {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private Collection<?> deepLoadCollection(Collection<?> collection, Collection<?> guideObj) {
-		Collection<Object> result = null;
+	private Collection<?> deepLoadCollection(Collection collection, Collection guideObj) {
+		Collection result = null;
 		
-		if(guideObj != null && !guideObj.isEmpty()){
+		if(guideObj != null && !guideObj.isEmpty() && 
+			collection != null && !collection.isEmpty()){
+				
 			try {
 				if (collection instanceof PersistentSet) {
-					result = new HashSet<Object>();
+					result = new HashSet();
 				}else  if (collection instanceof PersistentList){
-					result = new ArrayList<Object>();			
+					result = new ArrayList();			
 				} else {
 					result = collection.getClass().newInstance();
 				}
@@ -111,14 +113,17 @@ public class HibernateProxyUtils {
 				Object collGuideObj = guideObj.iterator().next();				
 				for (Object aux : collection) {
 					result.add(deepLoad(aux, collGuideObj));
-				} 
+				}
+				
+				collection.clear();
+				collection.add(result);
 				
 			} catch (Throwable e) {
 				e.printStackTrace();
 			} 
 		}
 		
-		return (result == null)?collection:result;
+		return collection;
 	}
 	
 	private void deepLoadDomainObject(AbstractObject<?> object, Object guideObj) {
