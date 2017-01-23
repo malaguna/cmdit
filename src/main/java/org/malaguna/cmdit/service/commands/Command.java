@@ -21,6 +21,8 @@ import java.util.Locale;
 
 import org.malaguna.cmdit.dao.usrmgt.LogDAO;
 import org.malaguna.cmdit.dao.usrmgt.UserDAO;
+import org.malaguna.cmdit.model.Center;
+import org.malaguna.cmdit.model.Participation;
 import org.malaguna.cmdit.model.usrmgt.ActionHelper;
 import org.malaguna.cmdit.model.usrmgt.Log;
 import org.malaguna.cmdit.model.usrmgt.RoleHelper;
@@ -59,6 +61,7 @@ public abstract class Command extends AbstractService {
 	private String action = null;
 	private boolean canLog = false;
 	private User user = null;
+	private Center center = null;
 	private Log log = null;
 
 	// DAO's
@@ -138,6 +141,15 @@ public abstract class Command extends AbstractService {
 
 	public String getUserComment() {
 		return userComment;
+	}
+
+	
+	public Center getCenter() {
+		return center;
+	}
+
+	public void setCenter(Center center) {
+		this.center = center;
 	}
 
 	public User getUser() {
@@ -221,9 +233,19 @@ public abstract class Command extends AbstractService {
 		if (actionHelper != null) {
 			if (actionHelper.exists(action)) {
 
-				Iterator<String> iRoles = user.getRoles().iterator();
-				while (!result && (iRoles.hasNext()))
-					result = roleHelper.isAuthorized(action, iRoles.next());
+				Iterator<Participation> iPart = user.getParticipations().iterator();
+				Participation p = null;
+				while (!result && (iPart.hasNext())){
+					p = iPart.next();
+					result = roleHelper.isAuthorized(action, p.getRol());
+					if(result == true && p.getCenter()!= null){
+						if(p.getCenter().getPid().equals(center.getPid())){
+							result = true;
+						}else{
+							result = false;
+						}
+					}
+				}
 
 			} else {
 				logError("err.cmd.authNoAction", null, this.getClass()

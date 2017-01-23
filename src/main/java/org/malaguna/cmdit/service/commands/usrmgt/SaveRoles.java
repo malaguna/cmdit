@@ -16,8 +16,10 @@
  */
 package org.malaguna.cmdit.service.commands.usrmgt;
 
+import java.util.Iterator;
 import java.util.Set;
 
+import org.malaguna.cmdit.model.Participation;
 import org.malaguna.cmdit.model.usrmgt.ActionHelper;
 import org.malaguna.cmdit.model.usrmgt.User;
 import org.malaguna.cmdit.service.commands.Command;
@@ -53,7 +55,12 @@ public class SaveRoles extends Command {
 	public Command runCommand() throws Exception {
 		
 		usuario = getUserDao().findById(usuario.getPid());
-		usuario.setRoles(roles);
+		Iterator<Participation> iPart = usuario.getParticipations().iterator();
+		Iterator<String> iRoles = roles.iterator();
+		while(iPart.hasNext() && iRoles.hasNext()){
+			iPart.next().setRol(iRoles.next());
+		}
+
 		getUserDao().persist(usuario);
 		
 		createLogComment("log.changeRol.ok", usuario.getPid(), roles);

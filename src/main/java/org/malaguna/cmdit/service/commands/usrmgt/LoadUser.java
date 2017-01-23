@@ -18,6 +18,7 @@ package org.malaguna.cmdit.service.commands.usrmgt;
 
 
 import org.malaguna.cmdit.dao.usrmgt.UserDAO;
+import org.malaguna.cmdit.model.Participation;
 import org.malaguna.cmdit.model.usrmgt.ActionHelper;
 import org.malaguna.cmdit.model.usrmgt.User;
 import org.malaguna.cmdit.service.BeanNames;
@@ -78,8 +79,11 @@ public class LoadUser extends LoadAbstractObjCmd<User, String> {
 						idRol = ((UserDAO)getDao()).getRolDefecto();
 	
 					//Si el rol indicado existe, se asocia, sino solo se guarda el usuario
-					if(idRol != null && !idRol.isEmpty())
-						usuario.addRol(idRol);
+					if(idRol != null && !idRol.isEmpty()){
+						Participation p = new Participation();
+						p.setRol(idRol);
+						usuario.getParticipations().add(p);
+					}
 					
 					getDao().persist(usuario);
 				}

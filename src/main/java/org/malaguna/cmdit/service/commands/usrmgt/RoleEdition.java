@@ -17,8 +17,11 @@
 package org.malaguna.cmdit.service.commands.usrmgt;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
+import org.malaguna.cmdit.model.Participation;
 import org.malaguna.cmdit.model.usrmgt.ActionHelper;
 import org.malaguna.cmdit.model.usrmgt.RoleHelper;
 import org.malaguna.cmdit.model.usrmgt.User;
@@ -55,7 +58,11 @@ public class RoleEdition extends ResultCommand<DualListModel<String>> {
 		usuario = getUserDao().findById(usuario.getPid());
 		
 		Set<String> allRoles = roleHelper.getAllRoles();
-		Set<String> userRoles = usuario.getRoles();
+		Iterator<Participation> iPart = usuario.getParticipations().iterator();
+		Set<String> userRoles = new HashSet<String>();
+		while(iPart.hasNext()){
+			userRoles.add(iPart.next().getRol());
+		}
 		result = new DualListModel<String>();
 		
 		allRoles.removeAll(userRoles);
