@@ -20,7 +20,7 @@
 		<!-- Asociaciones -->
 
         <many-to-one name="center" class="org.malaguna.cmdit.model.Center" >
-            <column name="pid" />
+            <column name="center" />
         </many-to-one>
         
         <many-to-one name="user" class="org.malaguna.cmdit.model.usrmgt.User" >
