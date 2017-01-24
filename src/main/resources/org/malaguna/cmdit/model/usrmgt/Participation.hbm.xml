@@ -12,17 +12,9 @@
 		<property name="oid" type="string" length="36">
 			<column name="oid"/>
 		</property>
-
-		<property name="name" type="string">
-			<column name="nombre"/>
-		</property>
 		
 		<property name="rol" type="string">
 			<column name="rol"/>
-		</property>
-	
-		<property name="active" type="java.lang.Boolean">
-			<column name="activo"/>
 		</property>
 
 		<!-- Asociaciones -->
