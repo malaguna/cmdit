@@ -14,7 +14,7 @@
 		</property>
 
 		<property name="name" type="string">
-			<column name="nombre"/>
+			<column name="name"/>
 		</property>
 	
 		<property name="active" type="java.lang.Boolean">
