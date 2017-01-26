@@ -238,7 +238,7 @@ public abstract class Command extends AbstractService {
 				while (!result && (iPart.hasNext())){
 					p = iPart.next();
 					result = roleHelper.isAuthorized(action, p.getRol());
-					if(result == true && p.getCenter()!= null){
+					if(result == true && p.getCenter()!= null && center!=null){
 						if(Long.parseLong(p.getCenter().getPid())==Long.parseLong(center.getPid())){
 							result = true;
 						}else{
