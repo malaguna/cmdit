@@ -239,7 +239,7 @@ public abstract class Command extends AbstractService {
 					p = iPart.next();
 					result = roleHelper.isAuthorized(action, p.getRol());
 					if(result == true && p.getCenter()!= null){
-						if(p.getCenter().getPid().equals(center.getPid())){
+						if(p.getCenter().getPid().toString().equals(center.getPid())){
 							result = true;
 						}else{
 							result = false;
