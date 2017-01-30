@@ -16,11 +16,7 @@
 		<property name="name" type="string">
 			<column name="name"/>
 		</property>
-		
-		<property name="provider_id" type="long">
-			<column name="provider_id"/>
-		</property>
-	
+
 		<property name="active" type="java.lang.Boolean">
 			<column name="activo"/>
 		</property>

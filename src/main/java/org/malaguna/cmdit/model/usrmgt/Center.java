@@ -23,25 +23,12 @@ import org.malaguna.cmdit.model.DomainObject;
 public class Center extends DomainObject<String> implements java.io.Serializable {
 	private static final long serialVersionUID = -6292946976577590102L;
 	private String name = null;
-	private Long provider_id = null;
 	private Boolean active = null;
 
 	private Set<Participation> participations = null; 
 
 	public Center() {
 		super();
-	}
-
-	
-	
-	public Long getProviderId() {
-		return provider_id;
-	}
-
-
-
-	public void setProviderId(Long providerId) {
-		this.provider_id = providerId;
 	}
 
 
