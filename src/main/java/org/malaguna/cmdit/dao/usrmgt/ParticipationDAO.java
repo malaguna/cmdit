@@ -21,7 +21,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.malaguna.cmdit.dao.impl.DomainHibernateDAOImpl;
-import org.malaguna.cmdit.model.Center;
+import org.malaguna.cmdit.model.usrmgt.Center;
 import org.malaguna.cmdit.model.usrmgt.Participation;
 import org.malaguna.cmdit.model.usrmgt.User;
 

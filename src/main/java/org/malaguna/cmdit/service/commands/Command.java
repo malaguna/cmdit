@@ -21,8 +21,8 @@ import java.util.Locale;
 
 import org.malaguna.cmdit.dao.usrmgt.LogDAO;
 import org.malaguna.cmdit.dao.usrmgt.UserDAO;
-import org.malaguna.cmdit.model.Center;
 import org.malaguna.cmdit.model.usrmgt.ActionHelper;
+import org.malaguna.cmdit.model.usrmgt.Center;
 import org.malaguna.cmdit.model.usrmgt.Log;
 import org.malaguna.cmdit.model.usrmgt.Participation;
 import org.malaguna.cmdit.model.usrmgt.RoleHelper;

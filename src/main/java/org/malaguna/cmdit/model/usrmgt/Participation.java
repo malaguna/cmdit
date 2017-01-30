@@ -16,7 +16,6 @@
  */
 package org.malaguna.cmdit.model.usrmgt;
 
-import org.malaguna.cmdit.model.Center;
 import org.malaguna.cmdit.model.DomainObject;
 
 public class Participation extends DomainObject<String> implements java.io.Serializable {

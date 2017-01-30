@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-	<class name="org.malaguna.cmdit.model.Center" table="center">
+	<class name="org.malaguna.cmdit.model.usrmgt.Center" table="center">
 		<id name="pid" type="long">
 			<column name="pid" />
 			<generator class="assigned" />

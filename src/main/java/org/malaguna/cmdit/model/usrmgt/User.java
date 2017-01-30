@@ -19,7 +19,6 @@ package org.malaguna.cmdit.model.usrmgt;
 import java.util.Date;
 import java.util.Set;
 
-import org.malaguna.cmdit.model.Center;
 import org.malaguna.cmdit.model.DomainObject;
 
 public class User extends DomainObject<String> implements java.io.Serializable {

@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.malaguna.cmdit.model.AbstractObject;
-import org.malaguna.cmdit.model.Center;
+import org.malaguna.cmdit.model.usrmgt.Center;
 import org.malaguna.cmdit.model.usrmgt.User;
 import org.malaguna.cmdit.service.BeanNames;
 import org.malaguna.cmdit.service.CommandRunner;
