@@ -19,8 +19,8 @@ package org.malaguna.cmdit.service.commands.usrmgt;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.malaguna.cmdit.model.Participation;
 import org.malaguna.cmdit.model.usrmgt.ActionHelper;
+import org.malaguna.cmdit.model.usrmgt.Participation;
 import org.malaguna.cmdit.model.usrmgt.User;
 import org.malaguna.cmdit.service.commands.Command;
 import org.springframework.beans.factory.BeanFactory;
@@ -57,9 +57,33 @@ public class SaveRoles extends Command {
 		usuario = getUserDao().findById(usuario.getPid());
 		Iterator<Participation> iPart = usuario.getParticipations().iterator();
 		Iterator<String> iRoles = roles.iterator();
-		while(iPart.hasNext() && iRoles.hasNext()){
-			iPart.next().setRol(iRoles.next());
+		if(usuario.getParticipations().size()<roles.size()){
+			while(iPart.hasNext()){
+				iPart.next().setRol(iRoles.next());
+			}
+			Participation p = null;
+			while(iRoles.hasNext()){
+				p = new Participation();
+				p.setRol(iRoles.next());
+				usuario.getParticipations().add(p);
+			}
+		}else if(usuario.getParticipations().size()==roles.size()){
+			while(iPart.hasNext()){
+				iPart.next().setRol(iRoles.next());
+			}
+		}else if(usuario.getParticipations().size()>roles.size()){
+			while(iPart.hasNext()){
+				usuario.getParticipations().remove(iPart.next());
+			}
+			Participation p = null;
+			while(iRoles.hasNext()){
+				p = new Participation();
+				p.setRol(iRoles.next());
+				usuario.getParticipations().add(p);
+			}
+			
 		}
+			
 
 		getUserDao().persist(usuario);
 		

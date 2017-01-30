@@ -19,8 +19,8 @@ package org.malaguna.cmdit.model.usrmgt;
 import java.util.Date;
 import java.util.Set;
 
+import org.malaguna.cmdit.model.Center;
 import org.malaguna.cmdit.model.DomainObject;
-import org.malaguna.cmdit.model.Participation;
 
 public class User extends DomainObject<String> implements java.io.Serializable {
 	private static final long serialVersionUID = -6292946976577590102L;
@@ -28,6 +28,7 @@ public class User extends DomainObject<String> implements java.io.Serializable {
 	private String name = null;
 	private Date date = null;
 	private Boolean active = null;
+	private Center defaultCenter = null;
 
 	private Set<Participation> participations = null;
 
@@ -50,9 +51,15 @@ public class User extends DomainObject<String> implements java.io.Serializable {
 	public Boolean getActive() {
 		return active;
 	}
-
-
 	
+	public Center getDefaultCenter() {
+		return defaultCenter;
+	}
+
+	public void setDefaultCenter(Center defaultCenter) {
+		this.defaultCenter = defaultCenter;
+	}
+
 	public Set<Participation> getParticipations() {
 		return participations;
 	}

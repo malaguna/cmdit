@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CMDit.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.malaguna.cmdit.model;
+package org.malaguna.cmdit.model.usrmgt;
 
+import org.malaguna.cmdit.model.Center;
 import org.malaguna.cmdit.model.DomainObject;
-import org.malaguna.cmdit.model.usrmgt.User;
 
 public class Participation extends DomainObject<String> implements java.io.Serializable {
 	private static final long serialVersionUID = -6292946976577590102L;

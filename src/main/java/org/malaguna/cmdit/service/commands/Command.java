@@ -22,9 +22,9 @@ import java.util.Locale;
 import org.malaguna.cmdit.dao.usrmgt.LogDAO;
 import org.malaguna.cmdit.dao.usrmgt.UserDAO;
 import org.malaguna.cmdit.model.Center;
-import org.malaguna.cmdit.model.Participation;
 import org.malaguna.cmdit.model.usrmgt.ActionHelper;
 import org.malaguna.cmdit.model.usrmgt.Log;
+import org.malaguna.cmdit.model.usrmgt.Participation;
 import org.malaguna.cmdit.model.usrmgt.RoleHelper;
 import org.malaguna.cmdit.model.usrmgt.User;
 import org.malaguna.cmdit.service.AbstractService;
@@ -232,19 +232,23 @@ public abstract class Command extends AbstractService {
 
 		if (actionHelper != null) {
 			if (actionHelper.exists(action)) {
-
+				
 				Iterator<Participation> iPart = user.getParticipations().iterator();
 				Participation p = null;
-				while (!result && (iPart.hasNext())){
-					p = iPart.next();
-					result = roleHelper.isAuthorized(action, p.getRol());
-					if(result == true && p.getCenter()!= null && center!=null){
+				if(center != null){
+					while(!result && (iPart.hasNext())){
+						p = iPart.next();
 						if(Long.parseLong(p.getCenter().getPid())==Long.parseLong(center.getPid())){
-							result = true;
-						}else{
-							result = false;
+							result = roleHelper.isAuthorized(action, p.getRol());
+							center = p.getCenter();
 						}
 					}
+				}else{
+					while (!result && (iPart.hasNext())){
+						p = iPart.next();
+						result = roleHelper.isAuthorized(action, p.getRol());
+					}
+					center = user.getDefaultCenter();
 				}
 
 			} else {

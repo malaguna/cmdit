@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-	<class name="org.malaguna.cmdit.model.Participation" table="participation">
+	<class name="org.malaguna.cmdit.model.usrmgt.Participation" table="participation">
 		<id name="pid" type="long">
 			<column name="pid" />
 			<generator class="assigned" />

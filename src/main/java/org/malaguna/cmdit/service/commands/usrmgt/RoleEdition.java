@@ -21,8 +21,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.malaguna.cmdit.model.Participation;
 import org.malaguna.cmdit.model.usrmgt.ActionHelper;
+import org.malaguna.cmdit.model.usrmgt.Participation;
 import org.malaguna.cmdit.model.usrmgt.RoleHelper;
 import org.malaguna.cmdit.model.usrmgt.User;
 import org.malaguna.cmdit.service.BeanNames;

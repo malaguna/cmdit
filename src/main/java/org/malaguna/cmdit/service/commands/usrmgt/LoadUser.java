@@ -18,8 +18,8 @@ package org.malaguna.cmdit.service.commands.usrmgt;
 
 
 import org.malaguna.cmdit.dao.usrmgt.UserDAO;
-import org.malaguna.cmdit.model.Participation;
 import org.malaguna.cmdit.model.usrmgt.ActionHelper;
+import org.malaguna.cmdit.model.usrmgt.Participation;
 import org.malaguna.cmdit.model.usrmgt.User;
 import org.malaguna.cmdit.service.BeanNames;
 import org.malaguna.cmdit.service.commands.ResultCommand;

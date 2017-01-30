@@ -31,11 +31,14 @@
 
 		<!-- Asociaciones -->
 
-		<set cascade="all-delete-orphan" name="participations" table="participacion">
+		<set cascade="all-delete-orphan" name="participations" table="participation">
             <key>
                 <column name="login"/>
             </key>
-            <one-to-many class="org.malaguna.cmdit.model.Participation"/>
+            <one-to-many class="org.malaguna.cmdit.model.usrmgt.Participation"/>
         </set>
+        
+        <one-to-one name="center" class="org.malaguna.cmdit.model.usrmgt.Center" cascade="save-update,delete-orphan" ></one-to-one>
+        
 	</class>
 </hibernate-mapping>

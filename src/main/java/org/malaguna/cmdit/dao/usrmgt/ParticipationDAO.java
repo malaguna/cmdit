@@ -14,11 +14,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CMDit.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.malaguna.cmdit.dao;
+package org.malaguna.cmdit.dao.usrmgt;
 
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 import org.malaguna.cmdit.dao.impl.DomainHibernateDAOImpl;
 import org.malaguna.cmdit.model.Center;
+import org.malaguna.cmdit.model.usrmgt.Participation;
+import org.malaguna.cmdit.model.usrmgt.User;
 
-public class CenterDAO extends DomainHibernateDAOImpl<Center, String> {
+public class ParticipationDAO extends DomainHibernateDAOImpl<Participation, String> {
 	
+	@SuppressWarnings("unchecked")
+	public List<Participation> findByUserCenter(User user, Center center) {
+		Criteria criteria =	getCurrentSession().createCriteria(persistentClass);
+
+		criteria.add(Restrictions.eq("user", user));
+		criteria.add(Restrictions.eq("center", center));
+		
+		return (List<Participation>) criteria.list();
+	}
 }
