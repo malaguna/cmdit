@@ -351,16 +351,10 @@ public class AbstractBean extends CommandRunner{
 	 * 
 	 * @param user
 	 */
-	protected void putAuthUserIntoSession(User user){
+	protected void putAuthUserIntoSession(User user, Center center){
 		if(this instanceof SessionAbstractBean){
 			ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 			ec.getSessionMap().put(AUTH_USER_KEY, user);
-		}
-	}
-	
-	protected void putAuthCenterIntoSession(Center center){
-		if(this instanceof SessionAbstractBean){
-			ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 			ec.getSessionMap().put(AUTH_CENTER_KEY, center);
 		}
 	}
