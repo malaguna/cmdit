@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.malaguna.cmdit.model.usrmgt.ActionHelper;
+import org.malaguna.cmdit.model.usrmgt.Center;
 import org.malaguna.cmdit.model.usrmgt.Participation;
 import org.malaguna.cmdit.model.usrmgt.User;
 import org.malaguna.cmdit.service.commands.Command;
@@ -27,6 +28,7 @@ import org.springframework.beans.factory.BeanFactory;
 
 public class SaveRoles extends Command {
 	private User usuario = null;
+	private Center center = null;
 	private Set<String> roles = null;
 
 	public SaveRoles(BeanFactory bf) {
@@ -38,6 +40,14 @@ public class SaveRoles extends Command {
 
 	public void setUsuario(User usuario) {
 		this.usuario = usuario;
+	}
+
+	public Center getCenter() {
+		return center;
+	}
+
+	public void setCenter(Center center) {
+		this.center = center;
 	}
 
 	public void setRoles(Set<String> roles) {
@@ -65,7 +75,11 @@ public class SaveRoles extends Command {
 			while(iRoles.hasNext()){
 				p = new Participation();
 				p.setRol(iRoles.next());
-				p.setCenter(usuario.getDefault_center());
+				if(center!=null){
+					p.setCenter(center);
+				}else{
+					p.setCenter(usuario.getDefault_center());
+				}
 				p.setUser(usuario);
 				usuario.getParticipations().add(p);
 			}
@@ -81,8 +95,11 @@ public class SaveRoles extends Command {
 			while(iRoles.hasNext()){
 				p = new Participation();
 				p.setRol(iRoles.next());
-				p.setCenter(usuario.getDefault_center());
-				p.setUser(usuario);
+				if(center!=null){
+					p.setCenter(center);
+				}else{
+					p.setCenter(usuario.getDefault_center());
+				}				p.setUser(usuario);
 				usuario.getParticipations().add(p);
 			}
 			
