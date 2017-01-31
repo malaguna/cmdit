@@ -28,14 +28,13 @@ public class LoadAllCenters extends ResultCommand<List<Center>> {
 	
 	public LoadAllCenters(BeanFactory bf) {
 		super(bf);
-		setCenterDao(getCenterDao());
 		setAction(ActionHelper.LOAD_USER);
 
 	}
 	
 	@Override
 	public boolean isValid() {
-		return true;
+		return getAction() != null;
 	}
 
 	@Override
