@@ -35,8 +35,7 @@ public class LoadAllCenters extends ResultCommand<List<Center>> {
 	
 	@Override
 	public boolean isValid() {
-		return getAction() != null && 
-				getCenterDao() != null;
+		return true;
 	}
 
 	@Override
