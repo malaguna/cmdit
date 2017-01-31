@@ -17,17 +17,18 @@
 package org.malaguna.cmdit.service.commands.usrmgt;
 
 
+import java.util.List;
+
 import org.malaguna.cmdit.model.usrmgt.ActionHelper;
 import org.malaguna.cmdit.model.usrmgt.Center;
 import org.malaguna.cmdit.service.commands.ResultCommand;
-import org.malaguna.cmdit.service.commands.generic.LoadAbstractObjCmd;
 import org.springframework.beans.factory.BeanFactory;
 
-public class LoadCenter extends LoadAbstractObjCmd<Center, String> {
+public class LoadAllCenters extends ResultCommand<List<Center>> {
 	
-	public LoadCenter(BeanFactory bf) {
+	public LoadAllCenters(BeanFactory bf) {
 		super(bf);
-		setDao(getCenterDao());
+		setCenterDao(getCenterDao());
 		setAction(ActionHelper.LOAD_USER);
 
 	}
@@ -35,8 +36,7 @@ public class LoadCenter extends LoadAbstractObjCmd<Center, String> {
 	@Override
 	public boolean isValid() {
 		return getAction() != null && 
-				getDao() != null && 
-				getIdObject() != null;
+				getCenterDao() != null;
 	}
 
 	@Override
@@ -45,11 +45,8 @@ public class LoadCenter extends LoadAbstractObjCmd<Center, String> {
 	}
 	
 	@Override
-	public ResultCommand<Center> runCommand() throws Exception {
-		Center center = null;
-		center = getCenterDao().findById(getIdObject());
-			
-		this.setResult(center);
+	public ResultCommand<List<Center>> runCommand() throws Exception {
+		this.setResult(getCenterDao().findAll());
 		return this;
 	}	
 }
