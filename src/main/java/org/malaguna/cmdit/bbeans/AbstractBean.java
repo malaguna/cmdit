@@ -56,6 +56,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  */
 public class AbstractBean extends CommandRunner{
 	private final static String AUTH_USER_KEY = "authuser";
+	private final static String AUTH_CENTER_KEY = "authcenter";
 	private Flash flash = null;
 	
 	/**
@@ -367,7 +368,7 @@ public class AbstractBean extends CommandRunner{
 	
 	private Center getCenterFromSession(){
 		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-		return (Center)ec.getSessionMap().get(AUTH_USER_KEY);
+		return (Center)ec.getSessionMap().get(AUTH_CENTER_KEY);
 	}
 	
 	protected void putFlash(String key, Object value){
