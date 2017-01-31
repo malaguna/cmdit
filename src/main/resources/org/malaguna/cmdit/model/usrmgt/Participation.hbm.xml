@@ -5,8 +5,10 @@
 <hibernate-mapping>
 	<class name="org.malaguna.cmdit.model.usrmgt.Participation" table="participation">
 		<id name="pid" type="long">
-			<column name="pid" />
-			<generator class="assigned" />
+			<column name="pid"/>
+            <generator class="sequence">
+            	<param name="sequence">part_id_seq</param>
+            </generator>
 		</id>
 
 		<property name="oid" type="string" length="36">
