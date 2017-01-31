@@ -19,6 +19,7 @@ package org.malaguna.cmdit.service.commands;
 import java.util.Iterator;
 import java.util.Locale;
 
+import org.malaguna.cmdit.dao.usrmgt.CenterDAO;
 import org.malaguna.cmdit.dao.usrmgt.LogDAO;
 import org.malaguna.cmdit.dao.usrmgt.UserDAO;
 import org.malaguna.cmdit.model.usrmgt.ActionHelper;
@@ -67,6 +68,7 @@ public abstract class Command extends AbstractService {
 	// DAO's
 	private UserDAO userDao = null;
 	private LogDAO logDao = null;
+	private CenterDAO centerDao = null;
 
 	// Helpers
 	private ActionHelper actionHelper = null;
@@ -125,6 +127,14 @@ public abstract class Command extends AbstractService {
 
 	protected UserDAO getUserDao() {
 		return userDao;
+	}
+
+	public CenterDAO getCenterDao() {
+		return centerDao;
+	}
+
+	public void setCenterDao(CenterDAO centerDao) {
+		this.centerDao = centerDao;
 	}
 
 	protected LogDAO getLogDao() {
