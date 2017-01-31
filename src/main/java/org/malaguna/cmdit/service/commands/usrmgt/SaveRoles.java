@@ -65,6 +65,8 @@ public class SaveRoles extends Command {
 			while(iRoles.hasNext()){
 				p = new Participation();
 				p.setRol(iRoles.next());
+				p.setCenter(usuario.getDefault_center());
+				p.setUser(usuario);
 				usuario.getParticipations().add(p);
 			}
 		}else if(usuario.getParticipations().size()==roles.size()){
@@ -79,6 +81,8 @@ public class SaveRoles extends Command {
 			while(iRoles.hasNext()){
 				p = new Participation();
 				p.setRol(iRoles.next());
+				p.setCenter(usuario.getDefault_center());
+				p.setUser(usuario);
 				usuario.getParticipations().add(p);
 			}
 			
