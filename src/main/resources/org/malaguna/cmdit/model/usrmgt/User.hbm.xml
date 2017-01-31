@@ -38,7 +38,9 @@
             <one-to-many class="org.malaguna.cmdit.model.usrmgt.Participation"/>
         </set>
         
-        <one-to-one name="defaultCenter" class="org.malaguna.cmdit.model.usrmgt.Center" cascade="save-update,delete-orphan" ></one-to-one>
+        <many-to-one class="org.malaguna.cmdit.model.usrmgt.Center" fetch="join" name="default_center">
+            <column name="default_center"/>
+        </many-to-one>
         
 	</class>
 </hibernate-mapping>

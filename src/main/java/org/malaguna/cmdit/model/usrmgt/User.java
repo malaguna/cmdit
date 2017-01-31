@@ -27,7 +27,7 @@ public class User extends DomainObject<String> implements java.io.Serializable {
 	private String name = null;
 	private Date date = null;
 	private Boolean active = null;
-	private Center defaultCenter = null;
+	private Center default_center = null;
 
 	private Set<Participation> participations = null;
 
@@ -51,12 +51,12 @@ public class User extends DomainObject<String> implements java.io.Serializable {
 		return active;
 	}
 	
-	public Center getDefaultCenter() {
-		return defaultCenter;
+	public Center getDefault_center() {
+		return default_center;
 	}
 
-	public void setDefaultCenter(Center defaultCenter) {
-		this.defaultCenter = defaultCenter;
+	public void setDefault_center(Center defaultCenter) {
+		this.default_center = defaultCenter;
 	}
 
 	public Set<Participation> getParticipations() {

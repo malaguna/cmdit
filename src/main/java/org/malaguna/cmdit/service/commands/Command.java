@@ -248,7 +248,7 @@ public abstract class Command extends AbstractService {
 						p = iPart.next();
 						result = roleHelper.isAuthorized(action, p.getRol());
 					}
-					center = user.getDefaultCenter();
+					center = user.getDefault_center();
 				}
 
 			} else {
