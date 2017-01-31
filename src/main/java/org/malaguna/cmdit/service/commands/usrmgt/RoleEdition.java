@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.malaguna.cmdit.model.usrmgt.ActionHelper;
+import org.malaguna.cmdit.model.usrmgt.Center;
 import org.malaguna.cmdit.model.usrmgt.Participation;
 import org.malaguna.cmdit.model.usrmgt.RoleHelper;
 import org.malaguna.cmdit.model.usrmgt.User;
@@ -32,6 +33,7 @@ import org.springframework.beans.factory.BeanFactory;
 
 public class RoleEdition extends ResultCommand<DualListModel<String>> {
 	private User usuario = null;
+	private Center center = null;
 	private RoleHelper roleHelper = null;
 
 	public RoleEdition(BeanFactory bf) {
@@ -44,6 +46,14 @@ public class RoleEdition extends ResultCommand<DualListModel<String>> {
 		this.usuario = usuario;
 	}
 	
+	public Center getCenter() {
+		return center;
+	}
+
+	public void setCenter(Center center) {
+		this.center = center;
+	}
+
 	@Override
 	public boolean isValid(){
 		return super.isValid() &&
@@ -61,7 +71,14 @@ public class RoleEdition extends ResultCommand<DualListModel<String>> {
 		Iterator<Participation> iPart = usuario.getParticipations().iterator();
 		Set<String> userRoles = new HashSet<String>();
 		while(iPart.hasNext()){
-			userRoles.add(iPart.next().getRol());
+			Participation p = iPart.next();
+			if(center != null){
+				if(p.getCenter().getPid().equals(center.getPid())){
+					userRoles.add(p.getRol());
+				}
+			}else if(p.getCenter().getPid().equals(usuario.getDefault_center().getPid())){
+				userRoles.add(p.getRol());
+			}
 		}
 		result = new DualListModel<String>();
 		
