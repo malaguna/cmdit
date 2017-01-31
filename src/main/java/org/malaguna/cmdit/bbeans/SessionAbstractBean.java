@@ -110,6 +110,7 @@ public class SessionAbstractBean extends AbstractBean {
 				setErrorMessage("Session Error:", cmd1.getUserComment());
 			else
 				putAuthUserIntoSession(getUser());
+				putAuthCenterIntoSession(getCenter());
 		} catch (CommandException ce) {
 			logger.error(ce.getLocalizedMessage());
 			setErrorMessage("Session Error:",
