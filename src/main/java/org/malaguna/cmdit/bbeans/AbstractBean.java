@@ -358,6 +358,13 @@ public class AbstractBean extends CommandRunner{
 		}
 	}
 	
+	protected void putAuthCenterIntoSession(Center center){
+		if(this instanceof SessionAbstractBean){
+			ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+			ec.getSessionMap().put(AUTH_CENTER_KEY, center);
+		}
+	}
+	
 	/**
 	 * It retrieves from session an user
 	 */
