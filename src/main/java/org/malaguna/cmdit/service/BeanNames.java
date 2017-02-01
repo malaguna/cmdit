@@ -25,5 +25,6 @@ public class BeanNames {
 	public static final String ACTION_HELPER = "actionHelper";
 	public static final String ROLE_HELPER = "roleHelper";
 	public static final String USER_LDAP = "userLdap";
-
+	
+	public static final String PARTICIPATION_DAO = "participationDao";
 }

@@ -19,6 +19,7 @@ package org.malaguna.cmdit.dao.usrmgt;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.malaguna.cmdit.dao.impl.DomainHibernateDAOImpl;
 import org.malaguna.cmdit.model.usrmgt.Center;
@@ -35,5 +36,16 @@ public class ParticipationDAO extends DomainHibernateDAOImpl<Participation, Stri
 		criteria.add(Restrictions.eq("center", center));
 		
 		return (List<Participation>) criteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Center> findByUser(User user) {
+		Criteria criteria =	getCurrentSession().createCriteria(persistentClass)
+				.setProjection(Projections.projectionList()
+						.add(Projections.groupProperty("center")));
+
+		criteria.add(Restrictions.eq("user", user));
+		
+		return (List<Center>) criteria.list();
 	}
 }
