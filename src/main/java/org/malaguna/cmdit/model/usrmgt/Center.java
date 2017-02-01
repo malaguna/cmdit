@@ -20,7 +20,7 @@ import java.util.Set;
 
 import org.malaguna.cmdit.model.DomainObject;
 
-public class Center extends DomainObject<String> implements java.io.Serializable {
+public class Center extends DomainObject<Long> implements java.io.Serializable {
 	private static final long serialVersionUID = -6292946976577590102L;
 	private String name = null;
 	private Boolean active = null;

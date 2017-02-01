@@ -19,22 +19,26 @@ package org.malaguna.cmdit.service.commands.usrmgt;
 
 import java.util.List;
 
+import org.malaguna.cmdit.dao.usrmgt.CenterDAO;
 import org.malaguna.cmdit.model.usrmgt.ActionHelper;
 import org.malaguna.cmdit.model.usrmgt.Center;
+import org.malaguna.cmdit.service.BeanNames;
 import org.malaguna.cmdit.service.commands.ResultCommand;
 import org.springframework.beans.factory.BeanFactory;
 
+
 public class LoadAllCenters extends ResultCommand<List<Center>> {
-	
+	CenterDAO dao = null;
 	public LoadAllCenters(BeanFactory bf) {
 		super(bf);
+		dao = (CenterDAO) bf.getBean(BeanNames.CENTER_DAO);
 		setAction(ActionHelper.LOAD_USER);
 
 	}
 	
 	@Override
 	public boolean isValid() {
-		return getAction() != null;
+		return getAction() != null && dao != null;
 	}
 
 	@Override
@@ -44,7 +48,7 @@ public class LoadAllCenters extends ResultCommand<List<Center>> {
 	
 	@Override
 	public ResultCommand<List<Center>> runCommand() throws Exception {
-		this.setResult(getCenterDao().findAll());
+		this.setResult(dao.findAll());
 		return this;
 	}	
 }

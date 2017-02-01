@@ -19,6 +19,7 @@ package org.malaguna.cmdit.service;
 public class BeanNames {
 	public static final String LOG_DAO 	= "logDao";
 	public static final String USER_DAO = "userDao";
+	public static final String CENTER_DAO = "centerDao";
 	public static final String MESSAGES = "msgSource";
 	public static final String SERVICE	= "serviceDelegate";
 
