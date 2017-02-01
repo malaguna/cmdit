@@ -21,7 +21,7 @@ import org.malaguna.cmdit.model.usrmgt.Center;
 import org.malaguna.cmdit.service.commands.generic.FindAbstractObjCmd;
 import org.springframework.beans.factory.BeanFactory;
 
-public class FindCenter extends FindAbstractObjCmd<Center, String> {
+public class FindCenter extends FindAbstractObjCmd<Center, Long> {
 
 	public FindCenter(BeanFactory bf) {
 		super(bf);

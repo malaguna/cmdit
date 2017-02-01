@@ -87,6 +87,7 @@ public abstract class Command extends AbstractService {
 			roleHelper = (RoleHelper) bf.getBean(BeanNames.ROLE_HELPER);
 			messages = (MessageSource) bf.getBean(BeanNames.MESSAGES);
 			userDao = (UserDAO) bf.getBean(BeanNames.USER_DAO);
+			centerDao = (CenterDAO) bf.getBean(BeanNames.CENTER_DAO);
 			logDao = (LogDAO) bf.getBean(BeanNames.LOG_DAO);
 		} catch (Exception e) {
 			logError("err.cmd.init", e, this.getClass().toString());
@@ -248,7 +249,7 @@ public abstract class Command extends AbstractService {
 				if(center != null){
 					while(!result && (iPart.hasNext())){
 						p = iPart.next();
-						if(Long.parseLong(p.getCenter().getPid())==Long.parseLong(center.getPid())){
+						if(p.getCenter().getPid()==center.getPid()){
 							result = roleHelper.isAuthorized(action, p.getRol());
 							center = p.getCenter();
 						}

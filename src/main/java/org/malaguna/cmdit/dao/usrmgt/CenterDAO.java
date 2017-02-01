@@ -19,6 +19,6 @@ package org.malaguna.cmdit.dao.usrmgt;
 import org.malaguna.cmdit.dao.impl.DomainHibernateDAOImpl;
 import org.malaguna.cmdit.model.usrmgt.Center;
 
-public class CenterDAO extends DomainHibernateDAOImpl<Center, String> {
+public class CenterDAO extends DomainHibernateDAOImpl<Center, Long> {
 	
 }
