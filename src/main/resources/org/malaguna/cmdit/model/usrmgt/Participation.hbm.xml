@@ -21,7 +21,7 @@
 
 		<!-- Asociaciones -->
 
-        <many-to-one name="center" class="org.malaguna.cmdit.model.usrmgt.Center" >
+        <many-to-one cascade="all" name="center" class="org.malaguna.cmdit.model.usrmgt.Center" >
             <column name="center" />
         </many-to-one>
         

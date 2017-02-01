@@ -31,7 +31,7 @@
 
 		<!-- Asociaciones -->
 
-		<set cascade="all-delete-orphan" name="participations" table="participation">
+		<set cascade="save-update,delete-orphan" name="participations" table="participation">
             <key>
                 <column name="login"/>
             </key>

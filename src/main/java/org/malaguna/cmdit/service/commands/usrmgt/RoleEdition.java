@@ -73,10 +73,10 @@ public class RoleEdition extends ResultCommand<DualListModel<String>> {
 		while(iPart.hasNext()){
 			Participation p = iPart.next();
 			if(center != null){
-				if(p.getCenter().getPid().equals(center.getPid())){
+				if(p.getCenter().getPid()==(center.getPid())){
 					userRoles.add(p.getRol());
 				}
-			}else if(p.getCenter().getPid().equals(usuario.getDefault_center().getPid())){
+			}else if(p.getCenter().getPid()==(usuario.getDefault_center().getPid())){
 				userRoles.add(p.getRol());
 			}
 		}

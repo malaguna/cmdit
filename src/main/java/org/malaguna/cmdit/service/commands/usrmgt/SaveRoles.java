@@ -64,7 +64,6 @@ public class SaveRoles extends Command {
 	@Override
 	public Command runCommand() throws Exception {
 		
-		usuario = getUserDao().findById(usuario.getPid());
 		Iterator<Participation> iPart = usuario.getParticipations().iterator();
 		Iterator<String> iRoles = roles.iterator();
 		if(usuario.getParticipations().size()<roles.size()){
