@@ -33,7 +33,7 @@ import org.springframework.beans.factory.BeanFactory;
 
 public class RoleEdition extends ResultCommand<DualListModel<String>> {
 	private User usuario = null;
-	private Center center = null;
+	private Center centerPick = null;
 	private RoleHelper roleHelper = null;
 
 	public RoleEdition(BeanFactory bf) {
@@ -44,14 +44,6 @@ public class RoleEdition extends ResultCommand<DualListModel<String>> {
 
 	public void setUsuario(User usuario){
 		this.usuario = usuario;
-	}
-	
-	public Center getCenter() {
-		return center;
-	}
-
-	public void setCenter(Center center) {
-		this.center = center;
 	}
 
 	@Override
@@ -72,8 +64,8 @@ public class RoleEdition extends ResultCommand<DualListModel<String>> {
 		Set<String> userRoles = new HashSet<String>();
 		while(iPart.hasNext()){
 			Participation p = iPart.next();
-			if(center != null){
-				if(p.getCenter().getPid()==(center.getPid())){
+			if(centerPick != null){
+				if(p.getCenter().getPid()==(centerPick.getPid())){
 					userRoles.add(p.getRol());
 				}
 			}else if(p.getCenter().getPid()==(usuario.getDefault_center().getPid())){
@@ -88,5 +80,13 @@ public class RoleEdition extends ResultCommand<DualListModel<String>> {
 		
 		this.setResult(result);
 		return this;
+	}
+
+	public Center getCenterPick() {
+		return centerPick;
+	}
+
+	public void setCenterPick(Center centerPick) {
+		this.centerPick = centerPick;
 	}
 }
