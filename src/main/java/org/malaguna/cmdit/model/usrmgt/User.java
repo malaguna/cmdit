@@ -17,11 +17,14 @@
 package org.malaguna.cmdit.model.usrmgt;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.malaguna.cmdit.model.DomainObject;
 
+
 public class User extends DomainObject<String> implements java.io.Serializable {
+	public static final User fullLoadGuide = new User();
 	private static final long serialVersionUID = -6292946976577590102L;
 	private String surName = null;
 	private String name = null;
@@ -30,6 +33,13 @@ public class User extends DomainObject<String> implements java.io.Serializable {
 	private Center default_center = null;
 
 	private Set<Participation> participations = null;
+	
+	public void init(){
+		Participation.fullLoadGuide.init();
+		fullLoadGuide.setParticipations(new HashSet<Participation>());
+		fullLoadGuide.getParticipations().add(Participation.fullLoadGuide);
+		fullLoadGuide.setDefault_center(new Center());
+	}
 
 	public User() {
 		super();

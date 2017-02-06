@@ -25,10 +25,13 @@ import org.malaguna.cmdit.service.BeanNames;
 import org.malaguna.cmdit.service.commands.ResultCommand;
 import org.malaguna.cmdit.service.commands.generic.LoadAbstractObjCmd;
 import org.malaguna.cmdit.service.ldap.UserLDAP;
+import org.malaguna.cmdit.service.reflection.HibernateProxyUtils;
 import org.springframework.beans.factory.BeanFactory;
+
 
 public class LoadUser extends LoadAbstractObjCmd<User, String> {
 	private UserLDAP usuarioLdap = null;
+	private HibernateProxyUtils hpu = HibernateProxyUtils.getInstance();
 	
 	public LoadUser(BeanFactory bf) {
 		super(bf);
@@ -108,8 +111,8 @@ public class LoadUser extends LoadAbstractObjCmd<User, String> {
 			createUserComment(key, getIdObject());
 			logError(key , null, getIdObject());
 		}
-			
-		this.setResult(usuario);
+		User.fullLoadGuide.init();
+		this.setResult((User) hpu.deepLoad(usuario, User.fullLoadGuide));
 		return this;
 	}	
 }

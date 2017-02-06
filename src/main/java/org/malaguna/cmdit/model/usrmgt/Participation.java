@@ -19,10 +19,16 @@ package org.malaguna.cmdit.model.usrmgt;
 import org.malaguna.cmdit.model.DomainObject;
 
 public class Participation extends DomainObject<String> implements java.io.Serializable {
+	public static final Participation fullLoadGuide = new Participation();
 	private static final long serialVersionUID = -6292946976577590102L;
 	private User user = null;
 	private Center center = null;
 	private String rol = null;
+	
+	public void init(){
+		fullLoadGuide.setUser(new User());
+		fullLoadGuide.setCenter(new Center());
+	}
 
 	public Participation() {
 		super();
