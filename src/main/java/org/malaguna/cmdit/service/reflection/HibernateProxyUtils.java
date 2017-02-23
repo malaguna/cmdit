@@ -20,7 +20,9 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.hibernate.Hibernate;
@@ -102,9 +104,9 @@ public class HibernateProxyUtils {
 				
 			try {
 				if (collection instanceof PersistentSet) {
-					result = new HashSet();
+					result = new LinkedHashSet<>();
 				}else  if (collection instanceof PersistentList){
-					result = new ArrayList();			
+					result = new ArrayList<>();
 				} else {
 					result = collection.getClass().newInstance();
 				}
