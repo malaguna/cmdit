@@ -22,7 +22,7 @@
 		</property>
 
 		<property name="comment" type="string">
-			<column name="comentario" not-null="false"/>
+			<column name="comentario" not-null="false" sql-type="clob"/>
 		</property>
 
 		<!-- Asociaciones -->
