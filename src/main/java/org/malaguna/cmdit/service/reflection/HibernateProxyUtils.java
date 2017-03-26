@@ -21,10 +21,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.collection.internal.PersistentList;
 import org.hibernate.collection.internal.PersistentSet;
@@ -32,6 +31,7 @@ import org.hibernate.proxy.HibernateProxy;
 import org.malaguna.cmdit.model.AbstractObject;
 
 public class HibernateProxyUtils {
+	private Logger logger = Logger.getLogger(this.getClass());
 	private static HibernateProxyUtils instancia = null;
 	
 	protected HibernateProxyUtils(){
@@ -95,7 +95,7 @@ public class HibernateProxyUtils {
 		return object;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Collection<?> deepLoadCollection(Collection collection, Collection guideObj) {
 		Collection result = null;
 		
@@ -146,13 +146,13 @@ public class HibernateProxyUtils {
 						property.getWriteMethod().invoke(object, unproxied);
 					}
 				} catch (IllegalAccessException  e) {
-					e.printStackTrace();
+					logger.error("Error while deepLoading domain object", e);
 				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
+					logger.info("Maybe guideObject is an abstract class of Object", e);
 				} catch (InvocationTargetException e) {
-					e.printStackTrace();
+					logger.error("Error while deepLoading domain objec", e);
 				} catch (Exception e){
-					e.printStackTrace();
+					logger.error("Error while deepLoading domain objec", e);
 				}
 			} 
 		} 
