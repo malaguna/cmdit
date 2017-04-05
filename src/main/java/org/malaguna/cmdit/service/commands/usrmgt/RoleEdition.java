@@ -17,9 +17,13 @@
 package org.malaguna.cmdit.service.commands.usrmgt;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.malaguna.cmdit.model.usrmgt.ActionHelper;
+import org.malaguna.cmdit.model.usrmgt.Center;
+import org.malaguna.cmdit.model.usrmgt.Participation;
 import org.malaguna.cmdit.model.usrmgt.RoleHelper;
 import org.malaguna.cmdit.model.usrmgt.User;
 import org.malaguna.cmdit.service.BeanNames;
@@ -29,6 +33,7 @@ import org.springframework.beans.factory.BeanFactory;
 
 public class RoleEdition extends ResultCommand<DualListModel<String>> {
 	private User usuario = null;
+	private Center centerPick = null;
 	private RoleHelper roleHelper = null;
 
 	public RoleEdition(BeanFactory bf) {
@@ -40,7 +45,7 @@ public class RoleEdition extends ResultCommand<DualListModel<String>> {
 	public void setUsuario(User usuario){
 		this.usuario = usuario;
 	}
-	
+
 	@Override
 	public boolean isValid(){
 		return super.isValid() &&
@@ -55,7 +60,18 @@ public class RoleEdition extends ResultCommand<DualListModel<String>> {
 		usuario = getUserDao().findById(usuario.getPid());
 		
 		Set<String> allRoles = roleHelper.getAllRoles();
-		Set<String> userRoles = usuario.getRoles();
+		Iterator<Participation> iPart = usuario.getParticipations().iterator();
+		Set<String> userRoles = new HashSet<String>();
+		while(iPart.hasNext()){
+			Participation p = iPart.next();
+			if(centerPick != null){
+				if(p.getCenter().getPid()==(centerPick.getPid())){
+					userRoles.add(p.getRol());
+				}
+			}else if(p.getCenter().getPid()==(usuario.getDefault_center().getPid())){
+				userRoles.add(p.getRol());
+			}
+		}
 		result = new DualListModel<String>();
 		
 		allRoles.removeAll(userRoles);
@@ -64,5 +80,13 @@ public class RoleEdition extends ResultCommand<DualListModel<String>> {
 		
 		this.setResult(result);
 		return this;
+	}
+
+	public Center getCenterPick() {
+		return centerPick;
+	}
+
+	public void setCenterPick(Center centerPick) {
+		this.centerPick = centerPick;
 	}
 }

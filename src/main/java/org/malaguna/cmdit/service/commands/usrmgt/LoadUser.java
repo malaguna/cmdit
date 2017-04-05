@@ -19,15 +19,19 @@ package org.malaguna.cmdit.service.commands.usrmgt;
 
 import org.malaguna.cmdit.dao.usrmgt.UserDAO;
 import org.malaguna.cmdit.model.usrmgt.ActionHelper;
+import org.malaguna.cmdit.model.usrmgt.Participation;
 import org.malaguna.cmdit.model.usrmgt.User;
 import org.malaguna.cmdit.service.BeanNames;
 import org.malaguna.cmdit.service.commands.ResultCommand;
 import org.malaguna.cmdit.service.commands.generic.LoadAbstractObjCmd;
 import org.malaguna.cmdit.service.ldap.UserLDAP;
+import org.malaguna.cmdit.service.reflection.HibernateProxyUtils;
 import org.springframework.beans.factory.BeanFactory;
+
 
 public class LoadUser extends LoadAbstractObjCmd<User, String> {
 	private UserLDAP usuarioLdap = null;
+	private HibernateProxyUtils hpu = HibernateProxyUtils.getInstance();
 	
 	public LoadUser(BeanFactory bf) {
 		super(bf);
@@ -78,8 +82,11 @@ public class LoadUser extends LoadAbstractObjCmd<User, String> {
 						idRol = ((UserDAO)getDao()).getRolDefecto();
 	
 					//Si el rol indicado existe, se asocia, sino solo se guarda el usuario
-					if(idRol != null && !idRol.isEmpty())
-						usuario.addRol(idRol);
+					if(idRol != null && !idRol.isEmpty()){
+						Participation p = new Participation();
+						p.setRol(idRol);
+						usuario.getParticipations().add(p);
+					}
 					
 					getDao().persist(usuario);
 				}
@@ -104,8 +111,8 @@ public class LoadUser extends LoadAbstractObjCmd<User, String> {
 			createUserComment(key, getIdObject());
 			logError(key , null, getIdObject());
 		}
-			
-		this.setResult(usuario);
+		User.fullLoadGuide.init();
+		this.setResult((User) hpu.deepLoad(usuario, User.fullLoadGuide));
 		return this;
 	}	
 }

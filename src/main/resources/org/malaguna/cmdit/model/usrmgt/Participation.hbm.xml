@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.malaguna.cmdit.model.usrmgt.Participation" table="participation">
+		<id name="pid" type="long">
+			<column name="pid"/>
+            <generator class="sequence">
+            	<param name="sequence">part_id_seq</param>
+            </generator>
+		</id>
+
+		<property name="oid" type="string" length="36">
+			<column name="oid"/>
+		</property>
+		
+		<property name="rol" type="string">
+			<column name="rol"/>
+		</property>
+
+		<!-- Asociaciones -->
+
+        <many-to-one cascade="all" name="center" class="org.malaguna.cmdit.model.usrmgt.Center" >
+            <column name="center" />
+        </many-to-one>
+        
+        <many-to-one name="user" class="org.malaguna.cmdit.model.usrmgt.User" >
+            <column name="login" />
+        </many-to-one>
+	</class>
+</hibernate-mapping>

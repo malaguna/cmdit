@@ -3,9 +3,9 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-	<class name="org.malaguna.cmdit.model.usrmgt.User" table="usuario">
-		<id name="pid" type="string">
-			<column name="login" />
+	<class name="org.malaguna.cmdit.model.usrmgt.Center" table="center">
+		<id name="pid" type="long">
+			<column name="pid" />
 			<generator class="assigned" />
 		</id>
 
@@ -13,16 +13,8 @@
 			<column name="oid"/>
 		</property>
 
-		<property name="date" type="date">
-			<column name="fecha" length="0"/>
-		</property>
-
 		<property name="name" type="string">
-			<column name="nombre"/>
-		</property>
-
-		<property name="surName" type="string">
-			<column name="apellidos"/>
+			<column name="name"/>
 		</property>
 
 		<property name="active" type="java.lang.Boolean">
@@ -31,16 +23,11 @@
 
 		<!-- Asociaciones -->
 
-		<set cascade="save-update,delete-orphan" name="participations" table="participation">
+		<set cascade="all-delete-orphan" name="participations" table="participation">
             <key>
-                <column name="login"/>
+                <column name="center"/>
             </key>
             <one-to-many class="org.malaguna.cmdit.model.usrmgt.Participation"/>
         </set>
-        
-        <many-to-one class="org.malaguna.cmdit.model.usrmgt.Center" fetch="join" name="default_center">
-            <column name="default_center"/>
-        </many-to-one>
-        
 	</class>
 </hibernate-mapping>

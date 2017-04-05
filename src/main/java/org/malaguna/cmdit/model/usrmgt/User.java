@@ -16,24 +16,30 @@
  */
 package org.malaguna.cmdit.model.usrmgt;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import org.malaguna.cmdit.model.DomainObject;
 
+
 public class User extends DomainObject<String> implements java.io.Serializable {
+	public static final User fullLoadGuide = new User();
 	private static final long serialVersionUID = -6292946976577590102L;
 	private String surName = null;
 	private String name = null;
 	private Date date = null;
 	private Boolean active = null;
+	private Center default_center = null;
 
-	private Set<String> roles = null;
+	private Set<Participation> participations = null;
+	
+	public void init(){
+		Participation.fullLoadGuide.init();
+		fullLoadGuide.setParticipations(new HashSet<Participation>());
+		fullLoadGuide.getParticipations().add(Participation.fullLoadGuide);
+		fullLoadGuide.setDefault_center(new Center());
+	}
 
 	public User() {
 		super();
@@ -54,26 +60,23 @@ public class User extends DomainObject<String> implements java.io.Serializable {
 	public Boolean getActive() {
 		return active;
 	}
-
-	public void setRoles(Set<String> roles) {
-		this.roles = roles;
-	}
-
-	public Set<String> getRoles() {
-		return roles;
-	}
-
-	public List<String> getRolesList() {
-		List<String> result = null;
-		
-		if(roles != null){
-			result = new ArrayList<String>(roles);
-			Collections.sort(result);
-		}
-		
-		return result;
-	}
 	
+	public Center getDefault_center() {
+		return default_center;
+	}
+
+	public void setDefault_center(Center defaultCenter) {
+		this.default_center = defaultCenter;
+	}
+
+	public Set<Participation> getParticipations() {
+		return participations;
+	}
+
+	public void setParticipations(Set<Participation> participations) {
+		this.participations = participations;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -117,6 +120,7 @@ public class User extends DomainObject<String> implements java.io.Serializable {
 	 * 
 	 * @param rol
 	 */
+	/*
 	public void addRol(String rol){
 		if(rol != null){
 			if(roles == null)
@@ -125,6 +129,7 @@ public class User extends DomainObject<String> implements java.io.Serializable {
 			roles.add(rol);
 		}
 	}
+	*/
 
 	/**
 	 * This is not convenience method, it is in Rol class, because the
@@ -132,6 +137,7 @@ public class User extends DomainObject<String> implements java.io.Serializable {
 	 * 
 	 * @param rol
 	 */
+	/*
 	public void delRol(String rol){
 		if(rol != null){
 			if(roles != null)
@@ -153,7 +159,7 @@ public class User extends DomainObject<String> implements java.io.Serializable {
 		
 		return result;
 	}
-	
+	*/
 	@Override 
 	public String toString(){
 		return (getPid() != null)?getFullName():super.toString();

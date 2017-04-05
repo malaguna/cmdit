@@ -21,6 +21,7 @@ import java.io.IOException;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
+import org.malaguna.cmdit.model.usrmgt.Center;
 import org.malaguna.cmdit.model.usrmgt.User;
 import org.malaguna.cmdit.service.commands.CommandException;
 import org.malaguna.cmdit.service.commands.usrmgt.LoadUser;
@@ -28,6 +29,7 @@ import org.primefaces.model.menu.MenuModel;
 
 public class SessionAbstractBean extends AbstractBean {
 	private MenuModel menu = null;
+	private Center center = null;
 	private User user = null;
 	private String login = null;
 
@@ -55,6 +57,14 @@ public class SessionAbstractBean extends AbstractBean {
 
 	public void setMenu(MenuModel menu) {
 		this.menu = menu;
+	}
+
+	public Center getCenter() {
+		return center;
+	}
+
+	public void setCenter(Center center) {
+		this.center = center;
 	}
 
 	public MenuModel getMenu() {
@@ -99,7 +109,7 @@ public class SessionAbstractBean extends AbstractBean {
 			if (getUser() == null)
 				setErrorMessage("Session Error:", cmd1.getUserComment());
 			else
-				putAuthUserIntoSession(getUser());
+				putAuthUserIntoSession(getUser(), getCenter());
 		} catch (CommandException ce) {
 			logger.error(ce.getLocalizedMessage());
 			setErrorMessage("Session Error:",

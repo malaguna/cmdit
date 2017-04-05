@@ -16,15 +16,19 @@
  */
 package org.malaguna.cmdit.service.commands.usrmgt;
 
+import java.util.Iterator;
 import java.util.Set;
 
 import org.malaguna.cmdit.model.usrmgt.ActionHelper;
+import org.malaguna.cmdit.model.usrmgt.Center;
+import org.malaguna.cmdit.model.usrmgt.Participation;
 import org.malaguna.cmdit.model.usrmgt.User;
 import org.malaguna.cmdit.service.commands.Command;
 import org.springframework.beans.factory.BeanFactory;
 
 public class SaveRoles extends Command {
 	private User usuario = null;
+	private Center center = null;
 	private Set<String> roles = null;
 
 	public SaveRoles(BeanFactory bf) {
@@ -36,6 +40,14 @@ public class SaveRoles extends Command {
 
 	public void setUsuario(User usuario) {
 		this.usuario = usuario;
+	}
+
+	public Center getCenter() {
+		return center;
+	}
+
+	public void setCenter(Center center) {
+		this.center = center;
 	}
 
 	public void setRoles(Set<String> roles) {
@@ -52,8 +64,47 @@ public class SaveRoles extends Command {
 	@Override
 	public Command runCommand() throws Exception {
 		
-		usuario = getUserDao().findById(usuario.getPid());
-		usuario.setRoles(roles);
+		Iterator<Participation> iPart = usuario.getParticipations().iterator();
+		Iterator<String> iRoles = roles.iterator();
+		if(usuario.getParticipations().size()<roles.size()){
+			while(iPart.hasNext()){
+				iPart.next().setRol(iRoles.next());
+			}
+			Participation p = null;
+			while(iRoles.hasNext()){
+				p = new Participation();
+				p.setRol(iRoles.next());
+				if(center!=null){
+					p.setCenter(center);
+				}else{
+					p.setCenter(usuario.getDefault_center());
+				}
+				p.setUser(usuario);
+				usuario.getParticipations().add(p);
+			}
+		}else if(usuario.getParticipations().size()==roles.size()){
+			while(iPart.hasNext()){
+				iPart.next().setRol(iRoles.next());
+			}
+		}else if(usuario.getParticipations().size()>roles.size()){
+			while(iPart.hasNext()){
+				usuario.getParticipations().remove(iPart.next());
+			}
+			Participation p = null;
+			while(iRoles.hasNext()){
+				p = new Participation();
+				p.setRol(iRoles.next());
+				if(center!=null){
+					p.setCenter(center);
+				}else{
+					p.setCenter(usuario.getDefault_center());
+				}				p.setUser(usuario);
+				usuario.getParticipations().add(p);
+			}
+			
+		}
+			
+
 		getUserDao().persist(usuario);
 		
 		createLogComment("log.changeRol.ok", usuario.getPid(), roles);

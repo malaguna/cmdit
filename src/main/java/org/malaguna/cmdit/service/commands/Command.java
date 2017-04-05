@@ -19,10 +19,13 @@ package org.malaguna.cmdit.service.commands;
 import java.util.Iterator;
 import java.util.Locale;
 
+import org.malaguna.cmdit.dao.usrmgt.CenterDAO;
 import org.malaguna.cmdit.dao.usrmgt.LogDAO;
 import org.malaguna.cmdit.dao.usrmgt.UserDAO;
 import org.malaguna.cmdit.model.usrmgt.ActionHelper;
+import org.malaguna.cmdit.model.usrmgt.Center;
 import org.malaguna.cmdit.model.usrmgt.Log;
+import org.malaguna.cmdit.model.usrmgt.Participation;
 import org.malaguna.cmdit.model.usrmgt.RoleHelper;
 import org.malaguna.cmdit.model.usrmgt.User;
 import org.malaguna.cmdit.service.AbstractService;
@@ -59,11 +62,13 @@ public abstract class Command extends AbstractService {
 	private String action = null;
 	private boolean canLog = false;
 	private User user = null;
+	private Center center = null;
 	private Log log = null;
 
 	// DAO's
 	private UserDAO userDao = null;
 	private LogDAO logDao = null;
+	private CenterDAO centerDao = null;
 
 	// Helpers
 	private ActionHelper actionHelper = null;
@@ -82,6 +87,7 @@ public abstract class Command extends AbstractService {
 			roleHelper = (RoleHelper) bf.getBean(BeanNames.ROLE_HELPER);
 			messages = (MessageSource) bf.getBean(BeanNames.MESSAGES);
 			userDao = (UserDAO) bf.getBean(BeanNames.USER_DAO);
+			centerDao = (CenterDAO) bf.getBean(BeanNames.CENTER_DAO);
 			logDao = (LogDAO) bf.getBean(BeanNames.LOG_DAO);
 		} catch (Exception e) {
 			logError("err.cmd.init", e, this.getClass().toString());
@@ -124,6 +130,14 @@ public abstract class Command extends AbstractService {
 		return userDao;
 	}
 
+	public CenterDAO getCenterDao() {
+		return centerDao;
+	}
+
+	public void setCenterDao(CenterDAO centerDao) {
+		this.centerDao = centerDao;
+	}
+
 	protected LogDAO getLogDao() {
 		return logDao;
 	}
@@ -138,6 +152,15 @@ public abstract class Command extends AbstractService {
 
 	public String getUserComment() {
 		return userComment;
+	}
+
+	
+	public Center getCenter() {
+		return center;
+	}
+
+	public void setCenter(Center center) {
+		this.center = center;
 	}
 
 	public User getUser() {
@@ -220,10 +243,24 @@ public abstract class Command extends AbstractService {
 
 		if (actionHelper != null) {
 			if (actionHelper.exists(action)) {
-
-				Iterator<String> iRoles = user.getRoles().iterator();
-				while (!result && (iRoles.hasNext()))
-					result = roleHelper.isAuthorized(action, iRoles.next());
+				
+				Iterator<Participation> iPart = user.getParticipations().iterator();
+				Participation p = null;
+				if(center != null){
+					while(!result && (iPart.hasNext())){
+						p = iPart.next();
+						if(p.getCenter().getPid()==center.getPid()){
+							result = roleHelper.isAuthorized(action, p.getRol());
+							center = p.getCenter();
+						}
+					}
+				}else{
+					while (!result && (iPart.hasNext())){
+						p = iPart.next();
+						result = roleHelper.isAuthorized(action, p.getRol());
+					}
+					center = user.getDefault_center();
+				}
 
 			} else {
 				logError("err.cmd.authNoAction", null, this.getClass()

@@ -14,18 +14,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CMDit.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.malaguna.cmdit.service;
+package org.malaguna.cmdit.service.commands.usrmgt;
 
-public class BeanNames {
-	public static final String LOG_DAO 	= "logDao";
-	public static final String USER_DAO = "userDao";
-	public static final String CENTER_DAO = "centerDao";
-	public static final String MESSAGES = "msgSource";
-	public static final String SERVICE	= "serviceDelegate";
+import java.util.List;
 
-	public static final String ACTION_HELPER = "actionHelper";
-	public static final String ROLE_HELPER = "roleHelper";
-	public static final String USER_LDAP = "userLdap";
+import org.malaguna.cmdit.model.usrmgt.Center;
+import org.malaguna.cmdit.service.commands.ResultCommand;
+import org.springframework.beans.factory.BeanFactory;
+
+public class FindAllCenters extends ResultCommand<List<Center>> {
 	
-	public static final String PARTICIPATION_DAO = "participationDao";
+	public FindAllCenters(BeanFactory bf) {
+		super(bf);
+	}
+
+	@Override
+	public ResultCommand<List<Center>> runCommand() {
+		this.setResult(getCenterDao().findAll());
+		return this;
+	}
 }

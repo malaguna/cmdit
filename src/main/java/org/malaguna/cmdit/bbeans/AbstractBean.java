@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.malaguna.cmdit.model.AbstractObject;
+import org.malaguna.cmdit.model.usrmgt.Center;
 import org.malaguna.cmdit.model.usrmgt.User;
 import org.malaguna.cmdit.service.BeanNames;
 import org.malaguna.cmdit.service.CommandRunner;
@@ -55,6 +56,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  */
 public class AbstractBean extends CommandRunner{
 	private final static String AUTH_USER_KEY = "authuser";
+	private final static String AUTH_CENTER_KEY = "authcenter";
 	private Flash flash = null;
 	
 	/**
@@ -227,6 +229,7 @@ public class AbstractBean extends CommandRunner{
 	protected Command runCommand(Command cmd){
 		cmd.setLocale(getLocale());
 		cmd.setUser(getAuthUserFromSession());
+		cmd.setCenter(getCenterFromSession());
 
 		try{			
 			cmd = super.runCommand(cmd);
@@ -348,10 +351,11 @@ public class AbstractBean extends CommandRunner{
 	 * 
 	 * @param user
 	 */
-	protected void putAuthUserIntoSession(User user){
+	protected void putAuthUserIntoSession(User user, Center center){
 		if(this instanceof SessionAbstractBean){
 			ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 			ec.getSessionMap().put(AUTH_USER_KEY, user);
+			ec.getSessionMap().put(AUTH_CENTER_KEY, center);
 		}
 	}
 	
@@ -361,6 +365,11 @@ public class AbstractBean extends CommandRunner{
 	private User getAuthUserFromSession(){
 		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 		return (User)ec.getSessionMap().get(AUTH_USER_KEY);
+	}
+	
+	private Center getCenterFromSession(){
+		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+		return (Center)ec.getSessionMap().get(AUTH_CENTER_KEY);
 	}
 	
 	protected void putFlash(String key, Object value){
