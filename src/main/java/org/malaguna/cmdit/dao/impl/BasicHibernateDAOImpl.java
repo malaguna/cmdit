@@ -61,13 +61,17 @@ public abstract class BasicHibernateDAOImpl<T, ID extends Serializable> implemen
 		return this.getSessionFactory().getCurrentSession();
 	}
 
-	@SuppressWarnings("unchecked")
 	public BasicHibernateDAOImpl(){
 		super();
+        createPersistentClass();
+	}
+
+	@SuppressWarnings("unchecked")
+    protected void createPersistentClass(){
 		this.persistentClass = (Class<T>)
 			((ParameterizedType) getClass().getGenericSuperclass())
 				.getActualTypeArguments()[0];
-	}
+    }
 	
 	public void setMessages(MessageSource messages) {
 		this.messages = messages;
