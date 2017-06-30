@@ -21,6 +21,7 @@ import java.util.Locale;
 
 import org.malaguna.cmdit.dao.usrmgt.CenterDAO;
 import org.malaguna.cmdit.dao.usrmgt.LogDAO;
+import org.malaguna.cmdit.dao.usrmgt.ParticipationDAO;
 import org.malaguna.cmdit.dao.usrmgt.UserDAO;
 import org.malaguna.cmdit.model.usrmgt.ActionHelper;
 import org.malaguna.cmdit.model.usrmgt.Center;
@@ -69,6 +70,7 @@ public abstract class Command extends AbstractService {
 	private UserDAO userDao = null;
 	private LogDAO logDao = null;
 	private CenterDAO centerDao = null;
+	private ParticipationDAO participationDao = null;
 
 	// Helpers
 	private ActionHelper actionHelper = null;
@@ -88,6 +90,7 @@ public abstract class Command extends AbstractService {
 			messages = (MessageSource) bf.getBean(BeanNames.MESSAGES);
 			userDao = (UserDAO) bf.getBean(BeanNames.USER_DAO);
 			centerDao = (CenterDAO) bf.getBean(BeanNames.CENTER_DAO);
+			participationDao = (ParticipationDAO) bf.getBean(BeanNames.PARTICIPATION_DAO);
 			logDao = (LogDAO) bf.getBean(BeanNames.LOG_DAO);
 		} catch (Exception e) {
 			logError("err.cmd.init", e, this.getClass().toString());
@@ -319,4 +322,12 @@ public abstract class Command extends AbstractService {
 	 * @return
 	 */
 	public abstract Command runCommand() throws Exception;
+
+	public ParticipationDAO getParticipationDao() {
+		return participationDao;
+	}
+
+	public void setParticipationDao(ParticipationDAO participationDao) {
+		this.participationDao = participationDao;
+	}
 }

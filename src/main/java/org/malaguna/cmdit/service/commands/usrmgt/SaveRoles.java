@@ -16,6 +16,7 @@
  */
 package org.malaguna.cmdit.service.commands.usrmgt;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -24,12 +25,15 @@ import org.malaguna.cmdit.model.usrmgt.Center;
 import org.malaguna.cmdit.model.usrmgt.Participation;
 import org.malaguna.cmdit.model.usrmgt.User;
 import org.malaguna.cmdit.service.commands.Command;
+import org.malaguna.cmdit.service.reflection.ReflectionUtils;
 import org.springframework.beans.factory.BeanFactory;
 
 public class SaveRoles extends Command {
+	private ReflectionUtils ru = ReflectionUtils.getInstance();
 	private User usuario = null;
 	private Center center = null;
 	private Set<String> roles = null;
+	private Set<String> rolesUser = null;
 
 	public SaveRoles(BeanFactory bf) {
 		super(bf);
@@ -38,6 +42,52 @@ public class SaveRoles extends Command {
 		setAction(ActionHelper.MANAGE_USERS);
 	}
 
+	@Override 
+	public boolean isValid(){
+		return super.isValid() &&
+				usuario != null &&
+				roles != null;
+	}
+	
+	@Override
+	public Command runCommand() throws Exception {
+		Set<String> rolesToAdd = new HashSet<String>();
+		Set<String> rolesToRemove = new HashSet<String>();
+		rolesUser = new HashSet<String>();
+		for(Participation p : usuario.getParticipations()){
+			rolesUser.add(p.getRol());
+		}
+		rolesToAdd.addAll(roles);
+		rolesToRemove.addAll(rolesUser);
+		rolesToAdd.removeAll(rolesUser);
+		rolesToRemove.removeAll(roles);
+		if(center == null){
+			center = getCenterDao().findById(usuario.getDefault_center().getPid());
+		}
+		Participation p = null;
+		for(String r : rolesToAdd){
+			p = new Participation();
+			p.setRol(r);
+			if(center!=null){
+				p.setCenter(center);
+			}else{
+				p.setCenter(usuario.getDefault_center());
+			}
+			p.setUser(usuario);
+			getParticipationDao().persist(p);
+		}
+		Set<Participation> setAux = new HashSet<Participation>();
+		for(Participation part : usuario.getParticipations()){
+			if(rolesToRemove.contains(part.getRol())){
+				getParticipationDao().delete(part);
+				setAux.add(part);
+			}
+		}
+		
+		createLogComment("log.changeRol.ok", usuario.getPid(), roles);
+		return this;
+	}
+	
 	public void setUsuario(User usuario) {
 		this.usuario = usuario;
 	}
@@ -52,62 +102,5 @@ public class SaveRoles extends Command {
 
 	public void setRoles(Set<String> roles) {
 		this.roles = roles;
-	}
-
-	@Override 
-	public boolean isValid(){
-		return super.isValid() &&
-				usuario != null &&
-				roles != null;
-	}
-	
-	@Override
-	public Command runCommand() throws Exception {
-		
-		Iterator<Participation> iPart = usuario.getParticipations().iterator();
-		Iterator<String> iRoles = roles.iterator();
-		if(usuario.getParticipations().size()<roles.size()){
-			while(iPart.hasNext()){
-				iPart.next().setRol(iRoles.next());
-			}
-			Participation p = null;
-			while(iRoles.hasNext()){
-				p = new Participation();
-				p.setRol(iRoles.next());
-				if(center!=null){
-					p.setCenter(center);
-				}else{
-					p.setCenter(usuario.getDefault_center());
-				}
-				p.setUser(usuario);
-				usuario.getParticipations().add(p);
-			}
-		}else if(usuario.getParticipations().size()==roles.size()){
-			while(iPart.hasNext()){
-				iPart.next().setRol(iRoles.next());
-			}
-		}else if(usuario.getParticipations().size()>roles.size()){
-			while(iPart.hasNext()){
-				usuario.getParticipations().remove(iPart.next());
-			}
-			Participation p = null;
-			while(iRoles.hasNext()){
-				p = new Participation();
-				p.setRol(iRoles.next());
-				if(center!=null){
-					p.setCenter(center);
-				}else{
-					p.setCenter(usuario.getDefault_center());
-				}				p.setUser(usuario);
-				usuario.getParticipations().add(p);
-			}
-			
-		}
-			
-
-		getUserDao().persist(usuario);
-		
-		createLogComment("log.changeRol.ok", usuario.getPid(), roles);
-		return this;
 	}
 }
